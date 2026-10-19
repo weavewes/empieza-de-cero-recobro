@@ -1,0 +1,417 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex,nofollow,noarchive">
+<title>Simulador · flujo de recobro en Kommo · Empieza de Cero</title>
+<style>
+  :root{
+    --ink:#1E2A4A; --muted:#5B6478; --line:#E4E8EF; --bg:#FBFBFD;
+    --wire:#3B9CFF; --teal:#00A79A; --amber:#B96E12; --rose:#BE3F55; --blue:#3B9CFF;
+  }
+  *{box-sizing:border-box}
+  html,body{height:100%}
+  body{margin:0;background:var(--bg);color:var(--ink);overflow:hidden;
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Inter,Roboto,Helvetica,Arial,sans-serif;
+    -webkit-font-smoothing:antialiased}
+
+  .bar{position:fixed;inset:0 0 auto 0;height:52px;background:#fff;border-bottom:1px solid var(--line);
+       display:flex;align-items:center;gap:14px;padding:0 16px;z-index:30}
+  .tabs{display:flex;align-items:center;gap:0;height:100%}
+  .tab{padding:0 14px;height:100%;display:flex;align-items:center;font-size:14px;color:var(--muted);
+       border-right:1px solid var(--line);text-decoration:none}
+  .tab.on{color:var(--ink);font-weight:600;box-shadow:inset 0 -2px 0 var(--blue)}
+  .tab:hover{background:#F6F8FC}
+  .spacer{flex:1}
+  .title{font-size:13px;color:var(--muted)}
+  .btn{border:0;border-radius:6px;padding:7px 13px;font-size:13px;font-weight:600;color:#fff;cursor:pointer;
+       font-family:inherit;line-height:1}
+  .btn.pink{background:#E2456B}
+  .btn.blue{background:#3B9CFF}
+  .btn.ghost{background:#fff;border:1px solid var(--line);color:var(--ink);font-weight:500}
+
+  #canvas{position:fixed;top:52px;left:0;right:0;bottom:0;overflow:hidden;cursor:grab;
+    background-color:var(--bg);
+    background-image:radial-gradient(#d7dde8 1px, transparent 1px);
+    background-size:20px 20px}
+  #canvas.grabbing{cursor:grabbing}
+  #world{position:absolute;top:0;left:0;transform-origin:0 0;will-change:transform}
+  #wires{position:absolute;top:0;left:0;overflow:visible;pointer-events:none}
+  #wires path{fill:none;stroke:var(--wire);stroke-width:2.4;pointer-events:stroke;cursor:pointer}
+  #wires path.dash{stroke-dasharray:6 6;stroke-width:2}
+  #wires path.temp{stroke-dasharray:5 5;stroke:#9AA6B8;pointer-events:none}
+  #wires path:hover{stroke-width:3.6}
+
+  .nd{position:absolute;width:236px;background:#fff;border-radius:8px;border:1px solid #EDF0F5;
+      box-shadow:0 1px 2px rgba(16,24,40,.08),0 4px 14px rgba(16,24,40,.07);user-select:none;touch-action:none}
+  .nd.sel{box-shadow:0 0 0 2px rgba(59,156,255,.55),0 6px 18px rgba(16,24,40,.12)}
+  .nd-h{display:flex;align-items:center;gap:8px;padding:9px 12px 7px;cursor:grab}
+  .nd-h:active{cursor:grabbing}
+  .nd-h .ic{font-size:13px;line-height:1}
+  .nd-h .tt{font-size:13px;font-weight:650;letter-spacing:-.01em;line-height:1.25}
+  .nd-b{padding:0 12px 11px;font-size:11.8px;color:var(--muted);line-height:1.4}
+  .nd-b .kv{display:flex;justify-content:space-between;gap:8px;padding:1.5px 0}
+  .nd-b .kv b{font-weight:600;color:var(--ink)}
+  .nd-b select{width:100%;margin-top:5px;font-family:inherit;font-size:11.8px;color:var(--ink);
+    border:1px solid #D8DEE8;border-radius:5px;padding:3px 5px;background:#fff}
+  .chips{display:flex;flex-wrap:wrap;gap:4px;margin-top:6px}
+  .chip{font-size:9.8px;padding:2px 5px;border-radius:4px;background:#F2F5FA;color:#4A5568;border:1px solid #E4E9F2}
+  .t-trigger{border-left:3px solid #7B61FF}
+  .t-adm{border-left:3px solid var(--teal)}
+  .t-gate{border-left:3px solid var(--rose)}
+  .t-rec{border-left:3px solid var(--amber)}
+  .t-out{border-left:3px solid var(--blue)}
+  .t-sys{border-left:3px solid #9AA6B8}
+
+  .port{position:absolute;width:11px;height:11px;border-radius:50%;background:#fff;border:2px solid #C6CEDA;
+        box-shadow:0 0 0 2px #fff;z-index:3}
+  .port.in{left:-6px;top:50%;transform:translateY(-50%)}
+  .port.out.r{right:-6px;cursor:crosshair;border-color:#3B9CFF}
+  .port.out.b{left:50%;bottom:-6px;transform:translateX(-50%);cursor:crosshair;border-color:#3B9CFF}
+  .port:hover{background:#EAF4FF;border-color:#3B9CFF}
+  .plbl{position:absolute;font-size:9.5px;color:#7C8698;pointer-events:none;white-space:nowrap}
+  .plbl.r{right:10px}
+  .plbl.b{left:50%;transform:translateX(-50%);bottom:-19px;background:#fff;padding:0 4px;border-radius:3px}
+
+  .zoom{position:fixed;right:16px;bottom:16px;display:flex;gap:6px;z-index:30}
+  .zoom .btn{width:36px;height:34px;padding:0;display:grid;place-items:center;font-size:15px;
+    background:#fff;border:1px solid var(--line);color:var(--ink)}
+  .hint{position:fixed;left:16px;bottom:16px;z-index:30;font-size:11.5px;color:var(--muted);
+        background:rgba(255,255,255,.94);border:1px solid var(--line);border-radius:8px;padding:7px 10px;max-width:560px}
+  .hint b{color:var(--ink);font-weight:600}
+  .toast{position:fixed;left:50%;top:66px;transform:translateX(-50%);background:#1E2A4A;color:#fff;
+    font-size:12.5px;padding:8px 14px;border-radius:8px;opacity:0;transition:opacity .25s;z-index:40;pointer-events:none}
+  .toast.on{opacity:1}
+  @media (max-width:820px){ .title{display:none} .hint{display:none} }
+</style>
+</head>
+<body>
+
+<div class="bar">
+  <div class="tabs">
+    <a class="tab" href="./">Flujo</a>
+    <span class="tab on">Simulador</span>
+  </div>
+  <span class="title">Recobro de honorarios · montaje en Kommo &nbsp;·&nbsp; arrastra los nodos · rueda para moverte · ctrl+rueda zoom · clic derecho borra</span>
+  <span class="spacer"></span>
+  <button class="btn ghost" id="reset">Reiniciar</button>
+  <button class="btn pink" id="clear">Limpiar</button>
+  <button class="btn blue" id="export">Exportar</button>
+</div>
+
+<div id="canvas">
+  <div id="world"><svg id="wires"></svg></div>
+</div>
+
+<div class="zoom">
+  <button class="btn" id="zo">−</button>
+  <button class="btn" id="zp">+</button>
+  <button class="btn" id="zf" title="Ajustar">⤢</button>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+(function(){
+  "use strict";
+  const W = 236;
+  const canvas = document.getElementById('canvas');
+  const world  = document.getElementById('world');
+  const svg    = document.getElementById('wires');
+  const KEY    = 'edc-recobro-kommo-v2';
+
+  let view = {x:50, y:16, z:0.85};
+  let nodes = [], links = [], seq = 1;
+
+  /* nodo: {id,x,y,cls,icon,title,body,outs:[{l,s}]}  s: 'r' derecha | 'b' abajo */
+  function defaults(){
+    const N = [];
+    const add = (x,y,cls,icon,title,body,outs)=>N.push({id:'n'+(seq++),x,y,cls,icon,title,body,
+      outs: outs || [{l:'',s:'b'}]});
+    const CL = {trigger:'t-trigger', adm:'t-adm', gate:'t-gate', rec:'t-rec', out:'t-out', sys:'t-sys'};
+
+    const P = 30;    // columna del eje
+    const S = 316;   // columna de salidas
+
+    /* --- eje: cada etapa encadena hacia abajo --- */
+    add(P,  20, CL.trigger,'⚡','Etapa 10 · 1 cuota',
+        '<div class="kv"><b>Disparador</b><span>entra en etapa 10</span></div><div class="kv"><b>Acción</b><span>enviar M1</span></div>');
+    add(P, 165, CL.adm,'✉️','Enviar M1 · administración',
+        '<div class="kv"><b>Desde</b><span>administracion@</span></div><div class="kv"><b>Espera</b><span>5 días</span></div><select><option>M1 · aviso de regularización</option></select>');
+    add(P, 325, CL.sys,'🔀','¿Paga?','',[{l:'sí',s:'r'},{l:'no paga',s:'b'}]);
+
+    add(P, 500, CL.trigger,'⚡','Etapa 20 · 2 cuotas',
+        '<div class="kv"><b>Disparador</b><span>sube a 2 cuotas</span></div><div class="kv"><b>Acción</b><span>enviar M2</span></div>');
+    add(P, 645, CL.adm,'✉️','Enviar M2 · administración',
+        '<div class="kv"><b>Desde</b><span>administracion@</span></div><div class="kv"><b>Espera</b><span>5 días</span></div><select><option>M2 · pago o propuesta con fecha</option></select>');
+    add(P, 805, CL.sys,'🔀','¿Paga o pide acuerdo?','',[{l:'paga',s:'r'},{l:'acuerdo',s:'r'},{l:'no paga',s:'b'}]);
+
+    add(P, 990, CL.trigger,'⚡','Etapa 30 · 3 cuotas',
+        '<div class="kv"><b>Disparador</b><span>sube a 3 cuotas</span></div><div class="kv"><b>Acción</b><span>enviar M3</span></div>');
+    add(P,1135, CL.adm,'✉️','Enviar M3 · administración',
+        '<div class="kv"><b>Desde</b><span>administracion@</span></div><div class="kv"><b>Espera</b><span>5 días</span></div><select><option>M3 · último aviso</option></select>');
+    add(P,1295, CL.sys,'🔀','¿Paga, acuerdo o más de 3?','',[{l:'paga',s:'r'},{l:'acuerdo',s:'r'},{l:'>3 cuotas',s:'b'}]);
+
+    add(P,1470, CL.gate,'⛔','Etapa 40 · validación jurídica',
+        'Detiene envíos y crea tarea obligatoria a jurídico. También entra aquí un acuerdo incumplido.'+
+        '<div class="chips"><span class="chip">estado procesal</span><span class="chip">masa</span><span class="chip">plan</span><span class="chip">EPI</span><span class="chip">afectado</span><span class="chip">vía</span></div>');
+    add(P,1665, CL.rec,'✉️','Enviar M4–M9 · recuperaciones',
+        '<div class="kv"><b>Desde</b><span>recuperaciones@</span></div><div class="kv"><b>Espera</b><span>10 días</span></div><select><option>según estado procesal</option><option>M4 · sin demanda</option><option>M5 · demanda presentada</option><option>M6 · auto de apertura</option><option>M7 · EPI en tramitación</option><option>M8 · plan de pagos</option><option>M9 · EPI concedida</option></select>',
+        [{l:'enviado',s:'b'},{l:'exonerado',s:'r'}]);
+    add(P,1860, CL.sys,'🔀','¿Vence sin pago?','',[{l:'paga',s:'r'},{l:'vence',s:'r'}]);
+
+    /* --- salidas, al lado de cada decisión --- */
+    add(S, 305, CL.out,'✅','Mover a 80 · regularizado','Pago íntegro. Se conserva el histórico.',[]);
+    add(S, 770, CL.out,'✅','Mover a 80 · regularizado','Pago íntegro.',[]);
+    add(S, 870, CL.out,'📝','Mover a 60 · acuerdo','Tarea por cada vencimiento.',[]);
+    add(S,1255, CL.out,'✅','Mover a 80 · regularizado','Pago íntegro.',[]);
+    add(S,1355, CL.out,'📝','Mover a 60 · acuerdo','Tarea por cada vencimiento. Si incumple, no vuelve a administración.',[]);
+    add(S,1840, CL.out,'✅','Mover a 80 · regularizado','Pago íntegro.',[]);
+    add(S,1940, CL.out,'⚖️','Mover a 70 · reclamación','Tras el requerimiento vencido no hay mensaje siguiente.',[]);
+    add(S,1700, CL.out,'🗄️','Mover a 90 · no reclamable','Crédito afectado por la exoneración: se cierra.',[]);
+
+    const id = t => N.find(n=>n.title===t).id;
+    const L = [];
+    const ref = x => (N.some(n=>n.id===x) ? x : id(x));
+    const link = (a,b,oi=0,dash)=>L.push({from:ref(a),to:ref(b),oi,dash:!!dash});
+    const ids = t => N.filter(n=>n.title===t).map(n=>n.id);
+
+    // eje administrativo
+    link('Etapa 10 · 1 cuota','Enviar M1 · administración');
+    link('Enviar M1 · administración','¿Paga?');
+    link('¿Paga?','Etapa 20 · 2 cuotas',1,true);
+
+    link('Etapa 20 · 2 cuotas','Enviar M2 · administración');
+    link('Enviar M2 · administración','¿Paga o pide acuerdo?');
+    link('¿Paga o pide acuerdo?','Etapa 30 · 3 cuotas',2,true);
+
+    link('Etapa 30 · 3 cuotas','Enviar M3 · administración');
+    link('Enviar M3 · administración','¿Paga, acuerdo o más de 3?');
+    link('¿Paga, acuerdo o más de 3?','Etapa 40 · validación jurídica',2,true);
+
+    // eje jurídico
+    link('Etapa 40 · validación jurídica','Enviar M4–M9 · recuperaciones');
+    link('Enviar M4–M9 · recuperaciones','¿Vence sin pago?',0);
+
+    // salidas por decisión
+    const o80 = ids('Mover a 80 · regularizado'), o60 = ids('Mover a 60 · acuerdo');
+    const o70 = ids('Mover a 70 · reclamación')[0], o90 = ids('Mover a 90 · no reclamable')[0];
+    link('¿Paga?', o80[0], 0);
+    link('¿Paga o pide acuerdo?', o80[1], 0); link('¿Paga o pide acuerdo?', o60[0], 1);
+    link('¿Paga, acuerdo o más de 3?', o80[2], 0); link('¿Paga, acuerdo o más de 3?', o60[1], 1);
+    link('¿Vence sin pago?', o80[3], 0); link('¿Vence sin pago?', o70, 1);
+    link('Enviar M4–M9 · recuperaciones', o90, 1);
+
+    return {nodes:N, links:L};
+  }
+
+  function nodeHTML(n){
+    const outs = n.outs || [{l:'',s:'r'}];
+    const right = outs.filter(o=>o.s==='r'), bottom = outs.find(o=>o.s==='b');
+    let ports = '<i class="port in"></i>', labels = '';
+    right.forEach((o,i)=>{
+      const top = right.length===1 ? 50 : (i===0?38:66);
+      ports += '<i class="port out r" data-oi="'+outs.indexOf(o)+'" style="top:'+top+'%"></i>';
+      if(o.l) labels += '<span class="plbl r" style="top:calc('+top+'% - 15px)">'+o.l+'</span>';
+    });
+    if(bottom){
+      ports += '<i class="port out b" data-oi="'+outs.indexOf(bottom)+'"></i>';
+      if(bottom.l) labels += '<span class="plbl b">'+bottom.l+'</span>';
+    }
+    return '<div class="nd-h"><span class="ic">'+n.icon+'</span><span class="tt">'+n.title+'</span></div>'+
+           (n.body?'<div class="nd-b">'+n.body+'</div>':'')+ports+labels;
+  }
+
+  function render(){
+    [...world.querySelectorAll('.nd')].forEach(e=>e.remove());
+    nodes.forEach(n=>{
+      const el = document.createElement('div');
+      el.className = 'nd '+n.cls;
+      el.dataset.id = n.id;
+      el.style.left = n.x+'px'; el.style.top = n.y+'px';
+      el.innerHTML = nodeHTML(n);
+      world.appendChild(el); n.el = el;
+    });
+    drawWires();
+  }
+
+  function pt(n, oi){
+    const p = n.el.querySelector('.port.out[data-oi="'+oi+'"]');
+    if(!p) return {x:n.x+W, y:n.y+30, side:'r'};
+    return {x: n.x + p.offsetLeft + p.offsetWidth/2,
+            y: n.y + p.offsetTop + p.offsetHeight/2,
+            side: p.classList.contains('b') ? 'b' : 'r'};
+  }
+
+  function drawWires(){
+    const out = [];
+    links.forEach((l,i)=>{
+      const a = nodes.find(n=>n.id===l.from), b = nodes.find(n=>n.id===l.to);
+      if(!a||!b||!a.el||!b.el) return;
+      const p1 = pt(a, l.oi||0);
+      const x2 = b.x, y2 = b.y + b.el.offsetHeight/2;
+      let d;
+      if(p1.side==='b'){
+        const dy = Math.max(40, Math.abs(y2-p1.y)/2);
+        d = 'M'+p1.x+','+p1.y+' C'+p1.x+','+(p1.y+dy)+' '+x2+','+(y2-dy)+' '+x2+','+y2;
+      } else {
+        const dx = Math.max(50, Math.abs(x2-p1.x)/2);
+        d = 'M'+p1.x+','+p1.y+' C'+(p1.x+dx)+','+p1.y+' '+(x2-dx)+','+y2+' '+x2+','+y2;
+      }
+      out.push('<path data-i="'+i+'" class="'+(l.dash?'dash':'')+'" d="'+d+'"/>');
+    });
+    svg.innerHTML = out.join('');
+  }
+
+  function apply(){ world.style.transform = 'translate('+view.x+'px,'+view.y+'px) scale('+view.z+')'; }
+
+  function save(){ try{ localStorage.setItem(KEY, JSON.stringify({
+    nodes:nodes.map(n=>({id:n.id,x:n.x,y:n.y,title:n.title,icon:n.icon,cls:n.cls,body:n.body,outs:n.outs})),
+    links, view, seq})); }catch(e){} }
+  function load(){
+    try{
+      const raw = localStorage.getItem(KEY); if(!raw) return false;
+      const s = JSON.parse(raw); if(!s||!s.nodes||!s.nodes.length) return false;
+      nodes = s.nodes; links = s.links||[]; view = s.view||view; seq = s.seq||nodes.length+1; return true;
+    }catch(e){ return false; }
+  }
+
+  let drag = null;
+  canvas.addEventListener('pointerdown', e=>{
+    if(e.target.closest('.nd')) return;
+    canvas.classList.add('grabbing');
+    drag = {mode:'pan', sx:e.clientX, sy:e.clientY, ox:view.x, oy:view.y};
+    canvas.setPointerCapture(e.pointerId);
+  });
+
+  world.addEventListener('pointerdown', e=>{
+    const outEl = e.target.closest('.port.out');
+    const head  = e.target.closest('.nd-h');
+    const nodeEl= e.target.closest('.nd');
+    if(outEl){
+      const n = nodes.find(x=>x.id===nodeEl.dataset.id);
+      const p = pt(n, +outEl.dataset.oi);
+      drag = {mode:'link', from:n.id, oi:+outEl.dataset.oi, x1:p.x, y1:p.y, side:p.side};
+      e.stopPropagation(); return;
+    }
+    if(head){
+      const n = nodes.find(x=>x.id===nodeEl.dataset.id);
+      document.querySelectorAll('.nd.sel').forEach(el=>el.classList.remove('sel'));
+      nodeEl.classList.add('sel');
+      drag = {mode:'node', n, sx:e.clientX, sy:e.clientY, ox:n.x, oy:n.y};
+      e.stopPropagation();
+    }
+  });
+
+  window.addEventListener('pointermove', e=>{
+    if(!drag) return;
+    if(drag.mode==='pan'){ view.x=drag.ox+(e.clientX-drag.sx); view.y=drag.oy+(e.clientY-drag.sy); apply(); return; }
+    if(drag.mode==='node'){
+      drag.n.x = drag.ox + (e.clientX-drag.sx)/view.z;
+      drag.n.y = drag.oy + (e.clientY-drag.sy)/view.z;
+      drag.n.el.style.left = drag.n.x+'px'; drag.n.el.style.top = drag.n.y+'px';
+      drawWires(); return;
+    }
+    if(drag.mode==='link'){
+      const r = canvas.getBoundingClientRect();
+      const x = (e.clientX-r.left-view.x)/view.z, y = (e.clientY-r.top-view.y)/view.z;
+      let d;
+      if(drag.side==='b'){
+        const dy = Math.max(40, Math.abs(y-drag.y1)/2);
+        d = 'M'+drag.x1+','+drag.y1+' C'+drag.x1+','+(drag.y1+dy)+' '+x+','+(y-dy)+' '+x+','+y;
+      } else {
+        const dx = Math.max(50, Math.abs(x-drag.x1)/2);
+        d = 'M'+drag.x1+','+drag.y1+' C'+(drag.x1+dx)+','+drag.y1+' '+(x-dx)+','+y+' '+x+','+y;
+      }
+      svg.innerHTML = '<path class="temp" d="'+d+'"/>';
+    }
+  });
+
+  window.addEventListener('pointerup', e=>{
+    if(!drag) return;
+    if(drag.mode==='link'){
+      const t = document.elementFromPoint(e.clientX,e.clientY);
+      const inPort = t && t.classList && t.classList.contains('in') ? t : null;
+      const nodeEl = inPort ? inPort.closest('.nd') : null;
+      if(nodeEl){
+        const to = nodeEl.dataset.id;
+        if(!links.some(l=>l.from===drag.from&&l.to===to&&l.oi===drag.oi)){
+          links.push({from:drag.from,to,oi:drag.oi,dash:false}); save(); drawWires(); toast('Conexión creada');
+        }
+      } else drawWires();
+    }
+    if(drag.mode==='pan') canvas.classList.remove('grabbing');
+    if(drag.mode==='node') save();
+    drag = null;
+  });
+
+  world.addEventListener('contextmenu', e=>{
+    const nodeEl = e.target.closest('.nd');
+    if(!nodeEl) return;
+    e.preventDefault();
+    const id = nodeEl.dataset.id;
+    nodes = nodes.filter(n=>n.id!==id);
+    links = links.filter(l=>l.from!==id&&l.to!==id);
+    nodeEl.remove(); drawWires(); save(); toast('Nodo eliminado');
+  });
+  svg.addEventListener('contextmenu', e=>{
+    const p = e.target.closest('path[data-i]');
+    if(!p) return;
+    e.preventDefault();
+    links.splice(+p.dataset.i,1); drawWires(); save(); toast('Conexión eliminada');
+  });
+
+  function zoomAt(f, cx, cy){
+    const z2 = Math.min(1.8, Math.max(.25, view.z*f));
+    const r = canvas.getBoundingClientRect();
+    const px = (cx!==undefined?cx-r.left:r.width/2), py = (cy!==undefined?cy-r.top:r.height/2);
+    view.x = px-(px-view.x)*(z2/view.z); view.y = py-(py-view.y)*(z2/view.z);
+    view.z = z2; apply(); save();
+  }
+  document.getElementById('zo').onclick = ()=>zoomAt(1/1.18);
+  document.getElementById('zp').onclick = ()=>zoomAt(1.18);
+  document.getElementById('zf').onclick = fit;
+  canvas.addEventListener('wheel', e=>{
+    if(e.ctrlKey||e.metaKey){ e.preventDefault(); zoomAt(e.deltaY<0?1.1:1/1.1, e.clientX, e.clientY); }
+    else { e.preventDefault(); view.x-=e.deltaX; view.y-=e.deltaY; apply(); }
+  }, {passive:false});
+
+  function fit(){
+    if(!nodes.length) return;
+    let x0=1e9,y0=1e9,x1=-1e9,y1=-1e9;
+    nodes.forEach(n=>{ const h = n.el?n.el.offsetHeight:110;
+      x0=Math.min(x0,n.x); y0=Math.min(y0,n.y); x1=Math.max(x1,n.x+W); y1=Math.max(y1,n.y+h); });
+    const r = canvas.getBoundingClientRect();
+    const z = Math.min(1.25, Math.max(.25, Math.min((r.width-90)/(x1-x0), (r.height-90)/(y1-y0))));
+    view.z = z; view.x = 45-x0*z; view.y = 42-y0*z; apply(); save();
+  }
+
+  function toast(m){ const t=document.getElementById('toast'); t.textContent=m; t.classList.add('on');
+    clearTimeout(t._h); t._h=setTimeout(()=>t.classList.remove('on'),1500); }
+
+  document.getElementById('reset').onclick = ()=>{
+    localStorage.removeItem(KEY); seq=1;
+    const d = defaults(); nodes=d.nodes; links=d.links;
+    render(); fit(); save(); toast('Flujo restaurado');
+  };
+  document.getElementById('clear').onclick = ()=>{ nodes=[]; links=[]; render(); save(); toast('Lienzo vacío'); };
+  document.getElementById('export').onclick = ()=>{
+    const data={generado:new Date().toISOString(),
+      nodos:nodes.map(n=>({titulo:n.title,tipo:n.cls.replace('t-',''),x:Math.round(n.x),y:Math.round(n.y)})),
+      conexiones:links.map(l=>{const a=nodes.find(n=>n.id===l.from),b=nodes.find(n=>n.id===l.to);
+        return {desde:a?a.title:l.from, salida:(a&&a.outs&&a.outs[l.oi]&&a.outs[l.oi].l)||l.oi,
+                hacia:b?b.title:l.to, condicional:!!l.dash};})};
+    const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});
+    const a=document.createElement('a'); a.href=URL.createObjectURL(blob);
+    a.download='flujo-recobro-kommo.json'; a.click(); URL.revokeObjectURL(a.href); toast('JSON exportado');
+  };
+
+  const restored = load();
+  if(!restored){ const d=defaults(); nodes=d.nodes; links=d.links; }
+  render();
+  if(restored){ apply(); } else { view = {x:44, y:14, z:1}; apply(); }
+  window.addEventListener('resize', ()=>drawWires());
+})();
+</script>
+</body>
+</html>

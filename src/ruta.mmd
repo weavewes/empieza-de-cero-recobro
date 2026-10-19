@@ -1,0 +1,23 @@
+flowchart LR
+  E00(["00 · al corriente"]):::ok
+  E10["10 · M1 · 1 cuota"]:::adm
+  E20["20 · M2 · 2 cuotas"]:::adm
+  E30["30 · M3 · 3 cuotas"]:::adm
+  E40{{"40 · validación jurídica"}}:::gate
+  E50["50 · requerimiento formal"]:::rec
+  E60["60 · acuerdo de pago"]:::rec
+  E70["70 · reclamación jurídica"]:::gate
+  E80(["80 · regularizado"]):::ok
+  E90["90 · no reclamable"]:::stop
+
+  E00 --> E10 --> E20 --> E30 --> E40 --> E50
+  E50 --> E60
+  E50 --> E70
+  E50 --> E80
+  E40 -.-> E90
+
+  classDef adm fill:#E8F7F5,stroke:#00A79A,stroke-width:1.2px,color:#1E2A4A
+  classDef rec fill:#FCF3E4,stroke:#D89B45,stroke-width:1.2px,color:#1E2A4A
+  classDef gate fill:#FCEDF0,stroke:#DB8296,stroke-width:1.2px,color:#1E2A4A
+  classDef ok fill:#DDF4F1,stroke:#00A79A,stroke-width:1.4px,color:#1E2A4A
+  classDef stop fill:#F1F4F8,stroke:#C3CBD8,stroke-width:1.2px,color:#5B6478

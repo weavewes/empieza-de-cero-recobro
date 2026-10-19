@@ -1,0 +1,46 @@
+flowchart TD
+  A(["Deuda vencida"]):::start --> Q{"¿Cuántas cuotas<br/>impagadas?"}:::q
+
+  Q -- "1" --> M1["M1 · 1 cuota"]:::adm
+  Q -- "2" --> M2["M2 · 2 cuotas"]:::adm
+  Q -- "3" --> M3["M3 · 3 cuotas"]:::adm
+
+  M1 -- "no paga" --> M2
+  M2 -- "no paga" --> M3
+  M3 -- ">3 cuotas o acuerdo incumplido" --> G{{"40 · validación jurídica"}}:::gate
+
+  M1 -- "paga" --> OK(["80 · regularizado"]):::ok
+  M2 -- "paga" --> OK
+  M3 -- "paga" --> OK
+  M2 -- "acuerdo" --> AC["60 · acuerdo de pago"]:::rec
+  M3 -- "acuerdo" --> AC
+
+  G --> M4["M4 · sin demanda"]:::rec
+  G --> M5["M5 · demanda presentada"]:::rec
+  G --> M6["M6 · auto de apertura"]:::rec
+  G --> M7["M7 · EPI en tramitación"]:::rec
+  G --> M8["M8 · plan de pagos"]:::rec
+  G --> M9["M9 · EPI concedida"]:::rec
+
+  M4 ~~~ M5 ~~~ M6 ~~~ M7 ~~~ M8 ~~~ M9
+
+  M4 --> REQ["50 · requerimiento formal"]:::req
+  M5 --> REQ
+  M6 --> REQ
+  M7 --> REQ
+  M8 --> REQ
+  M9 --> REQ
+  M9 -. "crédito exonerado" .-> NO["90 · no reclamable"]:::stop
+
+  REQ -- "paga" --> OK
+  REQ -- "acuerdo" --> AC
+  REQ -- "vence sin pago" --> REC["70 · reclamación jurídica"]:::gate
+
+  classDef start fill:#FFFFFF,stroke:#1E2A4A,stroke-width:1.3px,color:#1E2A4A
+  classDef q fill:#FFFFFF,stroke:#1E2A4A,stroke-width:1.3px,color:#1E2A4A
+  classDef adm fill:#E8F7F5,stroke:#00A79A,stroke-width:1.2px,color:#1E2A4A
+  classDef rec fill:#FCF3E4,stroke:#D89B45,stroke-width:1.2px,color:#1E2A4A
+  classDef req fill:#FCF3E4,stroke:#D89B45,stroke-width:1.8px,color:#1E2A4A
+  classDef gate fill:#FCEDF0,stroke:#DB8296,stroke-width:1.2px,color:#1E2A4A
+  classDef ok fill:#DDF4F1,stroke:#00A79A,stroke-width:1.4px,color:#1E2A4A
+  classDef stop fill:#F1F4F8,stroke:#C3CBD8,stroke-width:1.2px,color:#5B6478
