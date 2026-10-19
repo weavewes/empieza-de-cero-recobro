@@ -1,0 +1,323 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex,nofollow,noarchive">
+<title>Recobro de honorarios — flujo de trabajo · Empieza de Cero</title>
+<style>
+  :root{
+    --ink:#1E2A4A;
+    --muted:#5B6478;
+    --line:#E2E7EE;
+    --bg:#FFFFFF;
+    --soft:#F7F9FB;
+    --teal:#00A79A;
+    --teal-soft:#E8F7F5;
+    --amber:#B96E12;
+    --amber-soft:#FCF3E4;
+    --rose:#BE3F55;
+    --rose-soft:#FCEDF0;
+    --arrow:#9AA6B8;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0;background:var(--bg);color:var(--ink)}
+  body{
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Inter,Roboto,Helvetica,Arial,sans-serif;
+    font-size:16px;line-height:1.5;-webkit-font-smoothing:antialiased;
+  }
+  .page{max-width:940px;margin:0 auto;padding:40px 24px 64px}
+
+  header.top{display:flex;justify-content:space-between;align-items:flex-start;gap:24px;
+    padding-bottom:20px;border-bottom:1px solid var(--line);margin-bottom:34px}
+  .brand{font-size:13px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+  .brand b{color:var(--teal);letter-spacing:.14em}
+  .meta{font-size:12.5px;color:var(--muted);text-align:right;line-height:1.5}
+
+  h1{font-size:clamp(24px,4vw,34px);line-height:1.15;letter-spacing:-.02em;margin:0 0 10px;font-weight:650}
+  .sub{font-size:17px;color:var(--muted);margin:0 0 8px}
+  .lead{font-size:15.5px;color:var(--muted);max-width:62ch;margin:0 0 34px}
+
+  h2{font-size:13px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);
+     font-weight:600;margin:44px 0 14px;padding-bottom:8px;border-bottom:1px solid var(--line)}
+
+  /* banda de etapas */
+  .band{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+  .st{font-size:13px;padding:6px 10px;border-radius:7px;border:1px solid var(--line);
+      background:var(--soft);white-space:nowrap}
+  .st b{font-weight:650}
+  .st.hot{border-color:#EDB9C3;background:var(--rose-soft)}
+  .st.warm{border-color:#EBD3AE;background:var(--amber-soft)}
+  .st.good{border-color:#A9DDD7;background:var(--teal-soft)}
+  .sep{color:#C3CBD8;font-size:12px}
+
+  .canvas{border:1px solid var(--line);border-radius:14px;background:var(--soft);padding:16px 10px 6px;margin-top:6px}
+  svg{display:block;width:100%;height:auto}
+  svg text{font-family:inherit}
+  .t{fill:var(--ink);font-size:12px;font-weight:600}
+  .s{fill:var(--muted);font-size:10.4px}
+  .xs{fill:var(--muted);font-size:9.4px;letter-spacing:.07em}
+  .nb{fill:var(--ink);font-size:11.5px;font-weight:650}
+  .box{fill:#fff;stroke:var(--line);stroke-width:1.3}
+  .box-adm{fill:var(--teal-soft);stroke:var(--teal)}
+  .box-rec{fill:var(--amber-soft);stroke:#D89B45}
+  .box-gate{fill:var(--rose-soft);stroke:#DB8296}
+  .box-ok{fill:#DDF4F1;stroke:var(--teal)}
+  .box-stop{fill:#F1F4F8;stroke:#C3CBD8;stroke-dasharray:4 3}
+  .chipbox{fill:#fff;stroke:var(--line);stroke-width:1}
+  .arw{stroke:var(--arrow);stroke-width:1.3;fill:none}
+  .arw-d{stroke:var(--arrow);stroke-width:1.2;fill:none;stroke-dasharray:4 3}
+
+  .rules{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:16px}
+  .rule{border:1px solid var(--line);border-radius:12px;padding:16px;background:#fff}
+  .rule h3{margin:0 0 6px;font-size:15px;font-weight:650;letter-spacing:-.01em}
+  .rule.d h3{color:var(--rose)}
+  .rule p{margin:0;font-size:14px;color:var(--muted)}
+
+  .ask{border:1px solid var(--line);border-radius:12px;padding:20px 22px;background:var(--soft);margin-top:16px}
+  .ask ol{margin:0;padding-left:20px;font-size:15px}
+  .ask li{margin:0 0 9px}
+  .ask li:last-child{margin-bottom:0}
+  .ask b{font-weight:650}
+
+  footer{margin-top:52px;padding-top:18px;border-top:1px solid var(--line);
+    display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;
+    font-size:12.5px;color:var(--muted)}
+
+  @media (max-width:760px){
+    .page{padding:26px 18px 48px}
+    .rules{grid-template-columns:1fr}
+    header.top{flex-direction:column;gap:10px}
+    .meta{text-align:left}
+    .canvas{padding:10px 6px 2px}
+  }
+  @media print{
+    body{font-size:12px}
+    .page{max-width:none;padding:0}
+    .canvas{background:#fff}
+    section{break-inside:avoid}
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <header class="top">
+    <div class="brand"><b>Weaves</b> &nbsp;·&nbsp; documento de trabajo</div>
+    <div class="meta">
+      Empieza de Cero, SL<br>
+      Octubre 2026 · v1
+    </div>
+  </header>
+
+  <h1>Recobro de honorarios: cómo se gestiona una cuota impagada</h1>
+  <p class="sub">Un mismo circuito desde el primer aviso hasta la reclamación, sin avisos indefinidos.</p>
+  <p class="lead">Cada deuda vencida tiene un responsable, un plazo, una siguiente actuación y una consecuencia.
+  Las tres primeras cuotas se gestionan desde administración con tono progresivamente firme; a partir de la cuarta,
+  el expediente pasa a recuperaciones y la comunicación deja de ser un recordatorio para convertirse en un
+  requerimiento formal.</p>
+
+  <section>
+    <h2>Ruta del expediente</h2>
+    <div class="band">
+      <span class="st good"><b>00</b> al corriente</span>
+      <span class="sep">→</span>
+      <span class="st"><b>10</b> M1 · 1 cuota</span>
+      <span class="sep">→</span>
+      <span class="st"><b>20</b> M2 · 2 cuotas</span>
+      <span class="sep">→</span>
+      <span class="st"><b>30</b> M3 · 3 cuotas</span>
+      <span class="sep">→</span>
+      <span class="st hot"><b>40</b> validación jurídica</span>
+      <span class="sep">→</span>
+      <span class="st warm"><b>50</b> requerimiento formal</span>
+      <span class="sep">→</span>
+      <span class="st"><b>60</b> acuerdo</span>
+      <span class="sep">/</span>
+      <span class="st hot"><b>70</b> reclamación</span>
+      <span class="sep">/</span>
+      <span class="st good"><b>80</b> regularizado</span>
+      <span class="sep">/</span>
+      <span class="st"><b>90</b> no reclamable</span>
+    </div>
+  </section>
+
+  <section>
+    <h2>Flujo de decisión</h2>
+    <div class="canvas">
+    <svg viewBox="0 0 720 610" role="img" aria-label="Flujo de decisión del recobro de honorarios">
+      <defs>
+        <marker id="a" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse">
+          <path d="M0,0 L10,5 L0,10 z" fill="#9AA6B8"></path>
+        </marker>
+      </defs>
+
+      <rect class="box" x="250" y="6" width="220" height="38" rx="6"></rect>
+      <text class="t" x="360" y="22" text-anchor="middle">Deuda vencida</text>
+      <text class="s" x="360" y="35" text-anchor="middle">≥ 1 cuota impagada</text>
+
+      <line class="arw" x1="360" y1="44" x2="360" y2="60" marker-end="url(#a)"></line>
+
+      <rect class="box" x="180" y="62" width="360" height="44" rx="6"></rect>
+      <text class="t" x="360" y="80" text-anchor="middle">¿Cuántas cuotas impagadas?</text>
+      <text class="s" x="360" y="94" text-anchor="middle">o acuerdo de pago incumplido</text>
+
+      <path class="arw" d="M240,106 L240,118 L119,118 L119,132" marker-end="url(#a)"></path>
+      <text class="xs" x="14" y="150">ADMINISTRACIÓN · 5 DÍAS</text>
+
+      <rect class="box-adm" x="14" y="156" width="210" height="40" rx="6"></rect>
+      <text class="t" x="26" y="174">M1 · 1 cuota</text>
+      <text class="s" x="26" y="187">aviso de regularización</text>
+
+      <line class="arw" x1="119" y1="196" x2="119" y2="208" marker-end="url(#a)"></line>
+
+      <rect class="box-adm" x="14" y="210" width="210" height="40" rx="6"></rect>
+      <text class="t" x="26" y="228">M2 · 2 cuotas</text>
+      <text class="s" x="26" y="241">pago o propuesta con importe y fecha</text>
+
+      <line class="arw" x1="119" y1="250" x2="119" y2="262" marker-end="url(#a)"></line>
+
+      <rect class="box-adm" x="14" y="264" width="210" height="40" rx="6"></rect>
+      <text class="t" x="26" y="282">M3 · 3 cuotas</text>
+      <text class="s" x="26" y="295">último aviso administrativo</text>
+
+      <path class="arw" d="M119,304 L119,322 L72,322 L72,336" marker-end="url(#a)"></path>
+      <path class="arw" d="M119,304 L119,322 L172,322 L172,336" marker-end="url(#a)"></path>
+
+      <rect class="box-ok" x="14" y="338" width="104" height="38" rx="6"></rect>
+      <text class="nb" x="66" y="355" text-anchor="middle">80</text>
+      <text class="s" x="66" y="368" text-anchor="middle">regularizado</text>
+
+      <rect class="box-rec" x="126" y="338" width="98" height="38" rx="6"></rect>
+      <text class="nb" x="175" y="355" text-anchor="middle">60</text>
+      <text class="s" x="175" y="368" text-anchor="middle">acuerdo de pago</text>
+
+      <text class="s" x="14" y="390">si no paga: sube de nivel · si incumple el acuerdo: pasa a 40</text>
+
+      <line class="arw" x1="470" y1="106" x2="470" y2="132" marker-end="url(#a)"></line>
+      <text class="xs" x="486" y="150">>3 CUOTAS · RECUPERACIONES · 10 DÍAS</text>
+
+      <rect class="box-gate" x="250" y="156" width="456" height="96" rx="6"></rect>
+      <text class="t" x="264" y="175" style="fill:#BE3F55">40 · Validación jurídica obligatoria</text>
+      <text class="s" x="264" y="188">Envíos detenidos. Antes de cualquier M4–M9, jurídico confirma estos puntos.</text>
+
+      <rect class="chipbox" x="264" y="198" width="136" height="18" rx="4"></rect>
+      <text class="s" x="272" y="211">estado procesal</text>
+      <rect class="chipbox" x="408" y="198" width="136" height="18" rx="4"></rect>
+      <text class="s" x="416" y="211">crédito contra la masa</text>
+      <rect class="chipbox" x="552" y="198" width="142" height="18" rx="4"></rect>
+      <text class="s" x="560" y="211">plan de pagos vigente</text>
+
+      <rect class="chipbox" x="264" y="222" width="136" height="18" rx="4"></rect>
+      <text class="s" x="272" y="235">EPI concedida</text>
+      <rect class="chipbox" x="408" y="222" width="136" height="18" rx="4"></rect>
+      <text class="s" x="416" y="235">crédito afectado por EPI</text>
+      <rect class="chipbox" x="552" y="222" width="142" height="18" rx="4"></rect>
+      <text class="s" x="560" y="235">vía validada (civil / concursal)</text>
+
+      <path class="arw" d="M360,252 L360,262 L238,262 L238,392"></path>
+      <path class="arw" d="M360,262 L474,262 L474,392"></path>
+      <path class="arw" d="M238,272 L250,272" marker-end="url(#a)"></path>
+      <path class="arw" d="M238,322 L250,322" marker-end="url(#a)"></path>
+      <path class="arw" d="M238,372 L250,372" marker-end="url(#a)"></path>
+      <path class="arw" d="M474,272 L486,272" marker-end="url(#a)"></path>
+      <path class="arw" d="M474,322 L486,322" marker-end="url(#a)"></path>
+      <path class="arw" d="M474,372 L486,372" marker-end="url(#a)"></path>
+
+      <rect class="box-rec" x="250" y="254" width="224" height="36" rx="6"></rect>
+      <text class="t" x="262" y="271">M4 · sin demanda</text>
+      <text class="s" x="262" y="283">civil: negociación previa + monitorio</text>
+
+      <rect class="box-rec" x="486" y="254" width="220" height="36" rx="6"></rect>
+      <text class="t" x="498" y="271">M5 · demanda presentada</text>
+      <text class="s" x="498" y="283">judicializar no suspende el pago</text>
+
+      <rect class="box-rec" x="250" y="304" width="224" height="36" rx="6"></rect>
+      <text class="t" x="262" y="321">M6 · auto de apertura</text>
+      <text class="s" x="262" y="333">crédito contra la masa: artículo 242 TRLC</text>
+
+      <rect class="box-rec" x="486" y="304" width="220" height="36" rx="6"></rect>
+      <text class="t" x="498" y="321">M7 · EPI en tramitación</text>
+      <text class="s" x="498" y="333">créditos aún exigibles</text>
+
+      <rect class="box-rec" x="250" y="354" width="224" height="36" rx="6"></rect>
+      <text class="t" x="262" y="371">M8 · plan de pagos</text>
+      <text class="s" x="262" y="383">sin monitorio automático · art. 499.2 TRLC</text>
+
+      <rect class="box-rec" x="486" y="354" width="220" height="36" rx="6"></rect>
+      <text class="t" x="498" y="371">M9 · EPI concedida</text>
+      <text class="s" x="498" y="383">solo si el crédito no está exonerado</text>
+
+      <path class="arw-d" d="M706,372 L712,372 L712,470 L706,470" marker-end="url(#a)"></path>
+      <rect class="box-stop" x="486" y="452" width="220" height="36" rx="6"></rect>
+      <text class="t" x="498" y="469">90 · no reclamable</text>
+      <text class="s" x="498" y="481">crédito exonerado: se cierra</text>
+
+      <path class="arw" d="M360,392 L360,404 L478,404 L478,418" marker-end="url(#a)"></path>
+      <path class="arw" d="M596,392 L596,404 L478,404"></path>
+      <rect class="box" x="250" y="420" width="456" height="38" rx="6" style="fill:#FCF3E4;stroke:#D89B45"></rect>
+      <text class="t" x="264" y="438">50 · requerimiento formal enviado</text>
+      <text class="s" x="264" y="450">desde recuperaciones · vencimiento a 10 días</text>
+
+      <path class="arw" d="M478,458 L478,466 L320,466 L320,478" marker-end="url(#a)"></path>
+      <path class="arw" d="M478,466 L478,478" marker-end="url(#a)"></path>
+      <path class="arw" d="M478,466 L632,466 L632,478" marker-end="url(#a)"></path>
+
+      <rect class="box-ok" x="250" y="480" width="140" height="38" rx="6"></rect>
+      <text class="nb" x="320" y="497" text-anchor="middle">80 · regularizado</text>
+      <text class="s" x="320" y="510" text-anchor="middle">pago íntegro</text>
+
+      <rect class="box-rec" x="398" y="480" width="160" height="38" rx="6"></rect>
+      <text class="nb" x="478" y="497" text-anchor="middle">60 · acuerdo</text>
+      <text class="s" x="478" y="510" text-anchor="middle">tarea por cada vencimiento</text>
+
+      <rect class="box-gate" x="566" y="480" width="140" height="38" rx="6"></rect>
+      <text class="nb" x="636" y="497" text-anchor="middle">70 · reclamación</text>
+      <text class="s" x="636" y="510" text-anchor="middle">vence sin pago</text>
+
+      <path class="arw-d" d="M622,518 L622,536 L360,536 L360,548" marker-end="url(#a)"></path>
+      <rect class="box" x="250" y="550" width="456" height="34" rx="6"></rect>
+      <text class="s" x="264" y="565">Tras el requerimiento formal no hay mensaje siguiente: pasa a reclamación jurídica.</text>
+      <text class="s" x="264" y="577">Ninguna actuación urgente se bloquea nunca: se crea tarea para jurídico.</text>
+    </svg>
+    </div>
+  </section>
+
+  <section>
+    <h2>Tres reglas que sostienen el circuito</h2>
+    <div class="rules">
+      <div class="rule d">
+        <h3>No hay décimo mensaje</h3>
+        <p>M1–M3 buscan regularizar; M4–M9 son el último requerimiento. Vencido el plazo sin pago, se reclama. Un recordatorio más solo alarga el impago.</p>
+      </div>
+      <div class="rule">
+        <h3>El acuerdo no reinicia nada</h3>
+        <p>Un acuerdo de pago incumplido no vuelve a los avisos administrativos: pasa a validación jurídica o directamente a reclamación.</p>
+      </div>
+      <div class="rule">
+        <h3>La validación jurídica manda</h3>
+        <p>Mientras el crédito contra la masa, el plan de pagos o la EPI estén sin confirmar, no sale ningún requerimiento formal.</p>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Para cerrar el circuito</h2>
+    <div class="ask">
+      <ol>
+        <li><b>Validar el criterio</b> de reparto: 1–3 cuotas en administración con plazo de 5 días; más de 3 en recuperaciones con plazo de 10 días.</li>
+        <li><b>Confirmar los buzones</b> de envío y que pueda usarse el mismo canal para los requerimientos formales.</li>
+        <li><b>Designar quién valida</b> cada expediente en la fase jurídica (crédito contra la masa, plan de pagos, EPI y vía de reclamación).</li>
+        <li><b>Confirmar la cuenta de cobro</b> que aparece en los mensajes y si debe ir en el cuerpo o solo en la factura.</li>
+      </ol>
+    </div>
+  </section>
+
+  <footer>
+    <span>Preparado por Weaves · octubre 2026</span>
+    <span>Los carriles están definidos por función; los nombres se asignan al aprobar el flujo.</span>
+  </footer>
+
+</div>
+</body>
+</html>
