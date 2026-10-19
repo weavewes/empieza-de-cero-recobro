@@ -402,6 +402,9 @@ ${CUENTA} · Concepto: Honorarios-Profesionales {EXPEDIENTE}`}
     add(x(7), Y1, 'b-rec t-fin','','Fin de los recordatorios',
         'Último aviso de servicio. Aquí termina esta vía: no hay un quinto mensaje.',{ch:'flag'});
 
+    add(x(0), 220, 'b-rec t-ev','','Plantillas M1–M3 (texto del despacho)',
+        '<div class="kv"><b>1 cuota</b><span>M1 · aviso de regularización</span></div><div class="kv"><b>2 cuotas</b><span>M2 · requerimiento</span></div><div class="kv"><b>3 cuotas</b><span>M3 · último aviso</span></div>',{ch:'doc', msg:['M1','M2','M3']});
+
     add(x(2), 380, 't-out','✅','Mover a 80 · regularizado','Pago íntegro. Se conserva el histórico.',{outs:[],ch:'flag'});
 
     /* ── FRONTERA ── */
@@ -429,6 +432,7 @@ ${CUENTA} · Concepto: Honorarios-Profesionales {EXPEDIENTE}`}
     const L=[];
     const link=(a,b,oi=0,dash)=>L.push({from:ref(a),to:ref(b),oi,dash:!!dash});
 
+    link('Plantillas M1–M3 (texto del despacho)','Cuota vencida · día 0',0,true);
     link('Cuota vencida · día 0','WhatsApp · T1');
     link('WhatsApp · T1','¿Paga?');
     link('¿Paga?','SMS · T1b',0);
