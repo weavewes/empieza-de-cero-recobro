@@ -120,7 +120,7 @@
   .nd.b-rec .nd-h .tt{color:#00655C}
   .nd.b-imp .nd-h .tt{color:#A5304A}
   /* banda de frontera */
-  .nd.frontier{width:2130px;background:#fff;border:2px dashed #BE3F55;border-radius:12px;
+  .nd.frontier{width:2380px;background:#fff;border:2px dashed #BE3F55;border-radius:12px;
     box-shadow:none;padding:14px 20px;display:flex;align-items:center;gap:12px;color:#BE3F55;font-weight:650}
   .nd.frontier .ft{font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:#8B95A6}
   .nd.frontier .fx{font-size:16px}
@@ -135,6 +135,7 @@
     <a class="tab" href="flujo-canales.html">Canales</a>
     <a class="tab" href="decision.html">Decisión</a>
     <a class="tab" href="simulador.html">Simulador</a>
+    <a class="tab" href="v2.html">V2</a>
     <span class="tab on">Canales · sim</span>
   </div>
   <span class="title">Recobro de honorarios · montaje en Kommo · arrastra los nodos · rueda para avanzar · clic derecho borra</span>
@@ -382,7 +383,7 @@ ${CUENTA} · Concepto: Honorarios-Profesionales {EXPEDIENTE}`}
     const N = [];
     const add = (x,y,cls,icon,title,body,opts)=>N.push(Object.assign(
       {id:'n'+(seq++), x, y, cls, icon, title, body, outs:[{l:'',s:'r'}]}, opts||{}));
-    const Y1=40, Y2=640, S=270, X0=40;
+    const Y1=40, Y2=640, S=300, X0=40;
     const x = i => X0 + i*S;
 
     /* ── BLOQUE 1 · RECORDATORIOS (servicio) ── */
@@ -390,7 +391,7 @@ ${CUENTA} · Concepto: Honorarios-Profesionales {EXPEDIENTE}`}
         '<div class="kv"><b>Disparador</b><span>cuota impagada</span></div><div class="kv"><b>Bloque</b><span>recordatorios</span></div>',{ch:'doc'});
     add(x(1), Y1, 'b-rec t-adm','','WhatsApp · T1',
         '<div class="kv"><b>Cuándo</b><span>día 0</span></div><div class="kv"><b>Qué dice</b><span>estado de cuenta + enlace</span></div>',{ch:'wa', msg:['T1']});
-    add(x(2), Y1, 't-sys','🔀','¿Paga?','',{outs:[{l:'no responde',s:'r'},{l:'paga',s:'b'}]});
+    add(x(2), Y1, 't-sys','🔀','¿Paga?','',{outs:[{l:'no responde',s:'r'},{l:'pide acuerdo',s:'r'},{l:'paga',s:'b'}]});
     add(x(3), Y1, 'b-rec t-adm','','SMS · T1b',
         '<div class="kv"><b>Cuándo</b><span>+2 días</span></div><div class="kv"><b>Condición</b><span>sin lectura en WhatsApp</span></div>',{ch:'sms', msg:['T1b']});
     add(x(4), Y1, 'b-rec t-adm','','Email · T2',
@@ -406,6 +407,8 @@ ${CUENTA} · Concepto: Honorarios-Profesionales {EXPEDIENTE}`}
         '<div class="kv"><b>1 cuota</b><span>M1 · aviso de regularización</span></div><div class="kv"><b>2 cuotas</b><span>M2 · requerimiento</span></div><div class="kv"><b>3 cuotas</b><span>M3 · último aviso</span></div>',{ch:'doc', msg:['M1','M2','M3']});
 
     add(x(2), 380, 't-out','✅','Mover a 80 · regularizado','Pago íntegro. Se conserva el histórico.',{outs:[],ch:'flag'});
+    add(x(3), 240, 'b-rec t-out','📝','60 · acuerdo de pago',
+        'Tarea por cada vencimiento. Si incumple, no vuelve a administración.',{outs:[],ch:'flag'});
 
     /* ── FRONTERA ── */
     add(x(0), 500, 'frontier','','FRONTERA',
@@ -422,8 +425,10 @@ ${CUENTA} · Concepto: Honorarios-Profesionales {EXPEDIENTE}`}
         '<div class="kv"><b>Cuándo</b><span>mismo día</span></div><div class="kv"><b>Qué dice</b><span>el requerimiento está en su correo</span></div>',{ch:'smscert'});
     add(x(4), Y2, 'b-imp t-rec','','Llamada humana registrada',
         '<div class="kv"><b>Cuándo</b><span>+5 días</span></div><div class="kv"><b>Qué hace</b><span>recuerda el plazo, no negocia</span></div>',{ch:'call'});
-    add(x(5), Y2, 't-sys','🔀','¿Vence sin pago?','',{outs:[{l:'paga',s:'r'},{l:'vence',s:'b'}]});
+    add(x(5), Y2, 't-sys','🔀','¿Vence sin pago?','',{outs:[{l:'paga',s:'r'},{l:'pide acuerdo',s:'r'},{l:'vence',s:'b'}]});
     add(x(6), Y2, 't-out','✅','80 · regularizado (tras requerimiento)','Pago dentro del plazo.',{outs:[],ch:'flag'});
+    add(x(6), 790, 'b-imp t-out','📝','60 · acuerdo de pago (tras requerimiento)',
+        'Se formaliza por escrito. Un incumplimiento pasa a reclamación, no a un nuevo aviso.',{outs:[],ch:'flag'});
     add(x(5), 920, 'b-imp t-gate','⚖️','Mover a 70 · reclamación','Vence sin pago. Sin décimo mensaje: expediente a jurídico.',{outs:[],ch:'stop'});
     add(x(2), 920, 'b-imp t-stop','🗄️','90 · no reclamable','EPI concedida o crédito exonerado: se apaga y se cierra.',{outs:[],ch:'stop'});
 
@@ -436,7 +441,8 @@ ${CUENTA} · Concepto: Honorarios-Profesionales {EXPEDIENTE}`}
     link('Cuota vencida · día 0','WhatsApp · T1');
     link('WhatsApp · T1','¿Paga?');
     link('¿Paga?','SMS · T1b',0);
-    link('¿Paga?','Mover a 80 · regularizado',1);
+    link('¿Paga?','60 · acuerdo de pago',1);
+    link('¿Paga?','Mover a 80 · regularizado',2);
     link('SMS · T1b','Email · T2');
     link('Email · T2','WhatsApp · T3');
     link('WhatsApp · T3','Llamada · +10 días');
@@ -448,7 +454,8 @@ ${CUENTA} · Concepto: Honorarios-Profesionales {EXPEDIENTE}`}
     link('SMS certificado · aviso','Llamada humana registrada');
     link('Llamada humana registrada','¿Vence sin pago?');
     link('¿Vence sin pago?','80 · regularizado (tras requerimiento)',0);
-    link('¿Vence sin pago?','Mover a 70 · reclamación',1);
+    link('¿Vence sin pago?','60 · acuerdo de pago (tras requerimiento)',1);
+    link('¿Vence sin pago?','Mover a 70 · reclamación',2);
     link('Puerta jurídica','90 · no reclamable',0,true);
 
     return {nodes:N, links:L};
