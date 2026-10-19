@@ -1,0 +1,281 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex,nofollow,noarchive">
+<title>Flujo de canales · Recobro de honorarios · Empieza de Cero</title>
+<style>
+  :root{
+    --ink:#1E2A4A; --muted:#5B6478; --line:#E4E8EF; --bg:#FBFBFD; --soft:#F7F9FB;
+    --teal:#00A79A; --teal-soft:#E8F7F5; --amber:#B96E12; --amber-soft:#FCF3E4;
+    --rose:#BE3F55; --rose-soft:#FCEDF0; --blue:#3B9CFF; --greyrose:#EFE6E8;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0;background:var(--bg);color:var(--ink)}
+  body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Inter,Roboto,Helvetica,Arial,sans-serif;
+    font-size:16px;line-height:1.5;-webkit-font-smoothing:antialiased}
+  .page{max-width:940px;margin:0 auto;padding:22px 24px 64px}
+
+  .nav{display:flex;margin:0 0 28px;border-bottom:1px solid var(--line);overflow-x:auto}
+  .nav a{font-size:13.5px;color:var(--muted);text-decoration:none;padding:9px 14px;border-right:1px solid var(--line);white-space:nowrap}
+  .nav a.on{color:var(--ink);font-weight:600;box-shadow:inset 0 -2px 0 var(--blue)}
+  .nav a:hover{background:#F6F8FC}
+
+  header.top{display:flex;justify-content:space-between;align-items:flex-start;gap:24px;
+    padding-bottom:20px;border-bottom:1px solid var(--line);margin-bottom:34px}
+  .brand{font-size:13px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+  .brand b{color:var(--teal)}
+  .meta{font-size:12.5px;color:var(--muted);text-align:right}
+
+  h1{font-size:clamp(24px,4vw,34px);line-height:1.15;letter-spacing:-.02em;margin:0 0 10px;font-weight:650}
+  .sub{font-size:17px;color:var(--muted);margin:0 0 28px}
+  h2{font-size:13px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);font-weight:600;
+    margin:44px 0 14px;padding-bottom:8px;border-bottom:1px solid var(--line)}
+
+  svg.i{width:18px;height:18px;flex:none;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+
+  /* bloques */
+  .blk{border-radius:16px;padding:18px 18px 8px;border:1px solid}
+  .blk.a{background:var(--teal-soft);border-color:#A9DDD7;border-left:6px solid var(--teal)}
+  .blk.b{background:var(--rose-soft);border-color:#EDB9C3;border-left:6px solid var(--rose)}
+  .bh{display:flex;justify-content:space-between;align-items:baseline;gap:12px;flex-wrap:wrap;margin-bottom:14px}
+  .bh h3{margin:0;font-size:20px;letter-spacing:-.01em;font-weight:650}
+  .blk.a .bh h3{color:#00796F}
+  .blk.b .bh h3{color:var(--rose)}
+  .tagline{font-size:12.5px;font-weight:650;padding:3px 10px;border-radius:999px;background:#fff;border:1px solid}
+  .blk.a .tagline{color:#00796F;border-color:#A9DDD7}
+  .blk.b .tagline{color:var(--rose);border-color:#EDB9C3}
+
+  .step{display:grid;grid-template-columns:64px minmax(0,1fr);gap:12px;margin-bottom:12px;position:relative}
+  .step:not(:last-child)::before{content:"";position:absolute;left:31px;top:46px;bottom:-14px;width:2px;background:rgba(30,42,74,.14)}
+  .day{align-self:start;text-align:center;font-size:12px;font-weight:700;padding:6px 4px;border-radius:8px;background:#fff;
+    border:1px solid var(--line);color:var(--ink);line-height:1.2}
+  .day small{display:block;font-weight:500;color:var(--muted);font-size:10.5px}
+  .card{background:#fff;border:1px solid var(--line);border-radius:12px;padding:11px 14px}
+  .ch{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+  .ch .icons{display:flex;gap:5px;align-items:center}
+  .blk.a .ch .icons{color:var(--teal)}
+  .blk.b .ch .icons{color:var(--rose)}
+  .ch .nm{font-weight:650;font-size:15px}
+  .code{font-size:11.5px;font-weight:700;padding:1px 7px;border-radius:5px;background:var(--soft);border:1px solid var(--line);color:var(--muted);margin-left:auto}
+  .say{margin:4px 0 0;font-size:14px}
+  .cond{margin:5px 0 0;font-size:12.5px;color:var(--muted)}
+  .cond b{color:var(--ink);font-weight:600}
+
+  .last{background:var(--teal);color:#fff;border-radius:12px;padding:14px 16px;margin:4px 0 12px;display:flex;gap:12px;align-items:center}
+  .last svg.i{width:22px;height:22px}
+  .last b{display:block;font-size:16px}
+  .last span{font-size:13px;opacity:.92}
+
+  /* frontera */
+  .front{margin:22px 0;border:2px dashed var(--rose);border-radius:12px;background:#fff;color:var(--rose);
+    padding:16px 18px;text-align:center;font-weight:650;font-size:16px;display:flex;gap:10px;align-items:center;justify-content:center;flex-wrap:wrap}
+  .front svg.i{width:22px;height:22px}
+  .front span.l{font-size:11.5px;letter-spacing:.14em;text-transform:uppercase;font-weight:700;width:100%;color:var(--muted)}
+
+  .entry{background:#fff;border:1px dashed #DB8296;border-radius:12px;padding:10px 14px;margin-bottom:12px}
+  .entry .nm{font-weight:650;font-size:14px}
+  .entry p{margin:2px 0 0;font-size:13px;color:var(--muted)}
+  .gate{border-left:4px solid var(--rose)}
+  .branch{margin:2px 0 14px 76px;background:var(--greyrose);border:1px dashed #B79AA0;border-radius:12px;padding:11px 14px;color:#5E4A4F}
+  .branch .nm{font-weight:650;font-size:14px;display:flex;gap:8px;align-items:center}
+  .branch p{margin:3px 0 0;font-size:12.5px}
+
+  /* leyenda */
+  .legend{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+  .lg{display:flex;gap:9px;align-items:center;border:1px solid var(--line);border-radius:10px;background:#fff;padding:9px 11px;font-size:13px}
+  .lg svg.i{color:var(--ink)}
+
+  .cta{margin-top:30px;font-size:14px;color:var(--muted)}
+  .cta a{color:var(--ink);font-weight:650}
+  footer{margin-top:52px;padding-top:18px;border-top:1px solid var(--line);display:flex;justify-content:space-between;
+    gap:16px;flex-wrap:wrap;font-size:12.5px;color:var(--muted)}
+
+  @media (max-width:760px){
+    .page{padding:26px 18px 48px}
+    header.top{flex-direction:column;gap:10px}
+    .meta{text-align:left}
+    .legend{grid-template-columns:1fr 1fr}
+    .step{grid-template-columns:50px minmax(0,1fr);gap:8px}
+    .step:not(:last-child)::before{left:24px}
+    .branch{margin-left:0}
+  }
+  @media (max-width:420px){ .legend{grid-template-columns:1fr} }
+  @media print{ body{font-size:12px} .page{max-width:none;padding:0} .step,.blk{break-inside:avoid} }
+</style>
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+  <defs>
+    <symbol id="i-wa" viewBox="0 0 24 24"><path d="M4 20l1.3-4.2A8 8 0 1 1 8.2 18.8z"/><path d="M9.3 8.6c.3 2.2 2.3 4.3 4.9 5l1.2-1.2-1.8-1-.9.6c-.7-.3-1.4-1-1.7-1.7l.6-.9-1-1.8z"/></symbol>
+    <symbol id="i-sms" viewBox="0 0 24 24"><path d="M4 5h16v11H9.5L4 20z"/><circle cx="8.5" cy="10.5" r=".6"/><circle cx="12" cy="10.5" r=".6"/><circle cx="15.5" cy="10.5" r=".6"/></symbol>
+    <symbol id="i-smscert" viewBox="0 0 24 24"><path d="M13 16H9.5L4 20V5h16v6"/><circle cx="18" cy="17" r="4"/><path d="M16.2 17l1.3 1.3 2.3-2.5"/></symbol>
+    <symbol id="i-mail"viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3.5 7l8.5 6 8.5-6"/></symbol>
+    <symbol id="i-cert" viewBox="0 0 24 24"><path d="M14 18H5a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2h13a2 2 0 0 1 2 2v4"/><path d="M3.5 7.5L11.5 13l8-5.5"/><circle cx="18" cy="17" r="4"/><path d="M16.2 17l1.3 1.3 2.3-2.5"/></symbol>
+    <symbol id="i-call" viewBox="0 0 24 24"><path d="M5 4h3.5l1.8 4.6-2.2 1.4a10 10 0 0 0 5.9 5.9l1.4-2.2L20 15.5V19a2 2 0 0 1-2 2A15 15 0 0 1 3 6a2 2 0 0 1 2-2z"/></symbol>
+    <symbol id="i-bot" viewBox="0 0 24 24"><rect x="5" y="8" width="14" height="11" rx="3"/><path d="M12 8V5"/><circle cx="12" cy="4" r="1"/><circle cx="9.2" cy="13" r=".7"/><circle cx="14.8" cy="13" r=".7"/><path d="M9.5 16.2h5M3 12v3M21 12v3"/></symbol>
+    <symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 3l8 3v6c0 4.8-3.4 7.8-8 9-4.6-1.2-8-4.2-8-9V6z"/><path d="M8.5 12l2.4 2.4 4.6-4.8"/></symbol>
+    <symbol id="i-flag" viewBox="0 0 24 24"><path d="M5 21V4"/><path d="M5 4h12l-2.5 4L17 12H5"/></symbol>
+  </defs>
+</svg>
+
+<div class="page">
+
+  <nav class="nav"><a href="estudio.html">Estudio</a><a href="./">Flujo</a><a class="on" href="flujo-canales.html">Canales</a><a href="simulador.html">Simulador</a></nav>
+
+  <header class="top">
+    <div class="brand"><b>Weaves</b> &nbsp;·&nbsp; documento de trabajo</div>
+    <div class="meta">Empieza de Cero, SL<br>Octubre 2026 · v1</div>
+  </header>
+
+  <h1>Flujo de canales: hasta dónde llegan los recordatorios</h1>
+  <p class="sub">Arriba, el servicio: avisos sin plazo ni consecuencias. Abajo, el impago: todo lo que produce efectos jurídicos. Entre ambos, una frontera.</p>
+
+  <!-- BLOQUE A -->
+  <section class="blk a" aria-labelledby="ba">
+    <div class="bh"><h3 id="ba">Bloque A · Recordatorios</h3><span class="tagline">Servicio · sin plazo ni consecuencias</span></div>
+
+    <div class="step">
+      <div class="day">Día 0</div>
+      <div class="card">
+        <div class="ch"><span class="icons"><svg class="i"><use href="#i-wa"/></svg></span><span class="nm">WhatsApp</span><span class="code">T1</span></div>
+        <p class="say">Cuota pendiente, con enlace de pago.</p>
+        <p class="cond"><b>Parada:</b> paga o pide ajuste → sale del flujo.</p>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="day">+2<small>días</small></div>
+      <div class="card">
+        <div class="ch"><span class="icons"><svg class="i"><use href="#i-sms"/></svg></span><span class="nm">SMS</span><span class="code">T1b</span></div>
+        <p class="say">Recordatorio corto con enlace.</p>
+        <p class="cond"><b>Condición:</b> si WhatsApp no tuvo lectura.</p>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="day">+5<small>días</small></div>
+      <div class="card">
+        <div class="ch"><span class="icons"><svg class="i"><use href="#i-mail"/></svg></span><span class="nm">Email</span><span class="code">T2</span></div>
+        <p class="say">Estado de cuenta.</p>
+        <p class="cond"><b>Condición:</b> si sigue sin pago.</p>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="day">+7<small>días</small></div>
+      <div class="card">
+        <div class="ch"><span class="icons"><svg class="i"><use href="#i-wa"/></svg></span><span class="nm">WhatsApp</span><span class="code">T3</span></div>
+        <p class="say">Segundo aviso de servicio.</p>
+        <p class="cond"><b>Condición:</b> si sigue sin pago.</p>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="day">+10<small>días</small></div>
+      <div class="card">
+        <div class="ch"><span class="icons"><svg class="i"><use href="#i-bot"/></svg><svg class="i"><use href="#i-call"/></svg></span><span class="nm">Llamada (bot o humana)</span><span class="code">Guion 10 s</span></div>
+        <p class="say">Guion de 10 segundos, sin negociar.</p>
+        <p class="cond"><b>Parada:</b> si no contesta, se registra y se cierra el bloque.</p>
+      </div>
+    </div>
+
+    <div class="last">
+      <svg class="i"><use href="#i-flag"/></svg>
+      <div><b>Último recordatorio. Aquí termina la vía de servicio.</b><span>No hay más avisos de este tipo.</span></div>
+    </div>
+  </section>
+
+  <!-- FRONTERA -->
+  <div class="front" role="separator">
+    <span class="l">Frontera</span>
+    <svg class="i"><use href="#i-shield"/></svg>
+    <div>A partir de aquí todo produce efectos jurídicos. Nada de esto sale por WhatsApp.</div>
+  </div>
+
+  <!-- BLOQUE B -->
+  <section class="blk b" aria-labelledby="bb">
+    <div class="bh"><h3 id="bb">Bloque B · Impagos</h3><span class="tagline">Formal · con plazo y consecuencias</span></div>
+
+    <div class="entry">
+      <div class="nm">Entrada</div>
+      <p>&gt;3 cuotas o acuerdo incumplido → dispara la puerta jurídica.</p>
+    </div>
+
+    <div class="step">
+      <div class="day">Paso 1</div>
+      <div class="card gate">
+        <div class="ch"><span class="icons"><svg class="i"><use href="#i-shield"/></svg></span><span class="nm">Validación humana</span><span class="code">Puerta jurídica</span></div>
+        <p class="say">Se revisan estado procesal y vía antes de enviar.</p>
+        <p class="cond"><b>Nota:</b> sin visto bueno no sale nada.</p>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="day">Paso 2</div>
+      <div class="card">
+        <div class="ch"><span class="icons"><svg class="i"><use href="#i-cert"/></svg></span><span class="nm">Email certificado cualificado</span><span class="code">M4-M9</span></div>
+        <p class="say">Requerimiento según estado procesal.</p>
+        <p class="cond"><b>Nota:</b> Openum, eIDAS.</p>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="day">Paso 3</div>
+      <div class="card">
+        <div class="ch"><span class="icons"><svg class="i"><use href="#i-smscert"/></svg></span><span class="nm">SMS certificado</span><span class="code">Aviso</span></div>
+        <p class="say">Avisa de que el requerimiento está en el correo.</p>
+        <p class="cond"><b>Nota:</b> mismo día.</p>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="day">Paso 4</div>
+      <div class="card">
+        <div class="ch"><span class="icons"><svg class="i"><use href="#i-call"/></svg></span><span class="nm">Llamada humana registrada</span><span class="code">Plazo</span></div>
+        <p class="say">Recordatorio del plazo concedido.</p>
+        <p class="cond"><b>Nota:</b> +5 días.</p>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="day">Paso 5</div>
+      <div class="card">
+        <div class="ch"><span class="icons"><svg class="i"><use href="#i-flag"/></svg></span><span class="nm">Cierre</span><span class="code">Reclamación</span></div>
+        <p class="say">Vence sin pago → reclamación jurídica.</p>
+        <p class="cond"><b>Nota:</b> sin décimo mensaje.</p>
+      </div>
+    </div>
+
+    <div class="branch">
+      <div class="nm"><svg class="i"><use href="#i-shield"/></svg>Rama lateral · EPI concedida / crédito exonerado</div>
+      <p><b>No reclamable.</b> Se apaga el recordatorio y se cierra.</p>
+    </div>
+  </section>
+
+  <section>
+    <h2>Leyenda de iconos</h2>
+    <div class="legend">
+      <div class="lg"><svg class="i"><use href="#i-wa"/></svg>WhatsApp</div>
+      <div class="lg"><svg class="i"><use href="#i-sms"/></svg>SMS</div>
+      <div class="lg"><svg class="i"><use href="#i-mail"/></svg>Email</div>
+      <div class="lg"><svg class="i"><use href="#i-cert"/></svg>Email certificado</div>
+      <div class="lg"><svg class="i"><use href="#i-smscert"/></svg>SMS certificado</div>
+      <div class="lg"><svg class="i"><use href="#i-call"/></svg>Llamada humana</div>
+      <div class="lg"><svg class="i"><use href="#i-bot"/></svg>Bot de voz</div>
+      <div class="lg"><svg class="i"><use href="#i-shield"/></svg>Validación humana</div>
+      <div class="lg"><svg class="i"><use href="#i-flag"/></svg>Cierre</div>
+    </div>
+    <p class="cta">¿Por qué estos canales y en este orden? Está en el <a href="estudio.html">Estudio</a>. Aviso: esto no es asesoramiento jurídico; el despacho valida cada punto antes de implantar.</p>
+  </section>
+
+  <footer>
+    <span>Preparado por Weaves · octubre 2026</span>
+    <span>Los textos M1-M9 están en el <a href="simulador.html" style="color:inherit">Simulador</a>.</span>
+  </footer>
+
+</div>
+</body>
+</html>

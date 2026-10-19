@@ -1,0 +1,227 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex,nofollow,noarchive">
+<title>Estudio de canales · Recobro de honorarios · Empieza de Cero</title>
+<style>
+  :root{
+    --ink:#1E2A4A; --muted:#5B6478; --line:#E4E8EF; --bg:#FBFBFD; --soft:#F7F9FB;
+    --teal:#00A79A; --teal-soft:#E8F7F5; --amber:#B96E12; --amber-soft:#FCF3E4;
+    --rose:#BE3F55; --rose-soft:#FCEDF0; --blue:#3B9CFF;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0;background:var(--bg);color:var(--ink)}
+  body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Inter,Roboto,Helvetica,Arial,sans-serif;
+    font-size:16px;line-height:1.5;-webkit-font-smoothing:antialiased}
+  .page{max-width:940px;margin:0 auto;padding:22px 24px 64px}
+
+  .nav{display:flex;margin:0 0 28px;border-bottom:1px solid var(--line);overflow-x:auto}
+  .nav a{font-size:13.5px;color:var(--muted);text-decoration:none;padding:9px 14px;border-right:1px solid var(--line);white-space:nowrap}
+  .nav a.on{color:var(--ink);font-weight:600;box-shadow:inset 0 -2px 0 var(--blue)}
+  .nav a:hover{background:#F6F8FC}
+
+  header.top{display:flex;justify-content:space-between;align-items:flex-start;gap:24px;
+    padding-bottom:20px;border-bottom:1px solid var(--line);margin-bottom:34px}
+  .brand{font-size:13px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+  .brand b{color:var(--teal)}
+  .meta{font-size:12.5px;color:var(--muted);text-align:right}
+
+  h1{font-size:clamp(24px,4vw,34px);line-height:1.15;letter-spacing:-.02em;margin:0 0 10px;font-weight:650}
+  .sub{font-size:17px;color:var(--muted);margin:0 0 8px}
+  h2{font-size:13px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);font-weight:600;
+    margin:44px 0 14px;padding-bottom:8px;border-bottom:1px solid var(--line)}
+  p{margin:0 0 12px}
+  .muted{color:var(--muted)}
+  .small{font-size:13px}
+
+  .qa{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  .box{border:1px solid var(--line);border-radius:12px;padding:16px 18px;background:#fff}
+  .box h3{margin:0 0 6px;font-size:13px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:600}
+  .box p{margin:0;font-size:15px}
+  .box.a{background:var(--teal-soft);border-color:#A9DDD7}
+  .box.warn{background:var(--amber-soft);border-color:#EBD3AE}
+  ul.tight{margin:0;padding-left:20px;font-size:15px}
+  ul.tight li{margin:0 0 6px}
+
+  .tw{overflow-x:auto;border:1px solid var(--line);border-radius:12px;background:#fff;max-width:100%}
+  table{border-collapse:collapse;width:100%;font-size:13.5px}
+  th,td{text-align:left;vertical-align:top;padding:10px 12px;border-bottom:1px solid var(--line)}
+  th{background:var(--soft);font-size:12px;letter-spacing:.04em;color:var(--muted);font-weight:600;white-space:nowrap}
+  tr:last-child td{border-bottom:0}
+  table.wide{min-width:760px}
+  table.mid{min-width:620px}
+  td.k{font-weight:650;white-space:nowrap}
+  .tag{display:inline-block;font-size:10.5px;font-weight:700;padding:1px 5px;border-radius:4px;margin-left:4px;
+    border:1px solid var(--line);background:var(--soft);color:var(--muted);vertical-align:1px}
+  .tag.v{background:var(--teal-soft);border-color:#A9DDD7;color:#00796F}
+  .tag.e{background:var(--amber-soft);border-color:#EBD3AE;color:var(--amber)}
+  .pill{display:inline-block;font-size:12px;padding:2px 8px;border-radius:999px;border:1px solid var(--line);background:var(--soft);white-space:nowrap}
+  .pill.t{background:var(--teal-soft);border-color:#A9DDD7}
+  .pill.r{background:var(--rose-soft);border-color:#EDB9C3}
+  .pill.a{background:var(--amber-soft);border-color:#EBD3AE}
+  .note{font-size:12.5px;color:var(--muted);margin:8px 2px 0}
+
+  .cta{margin-top:28px;border:1px solid var(--line);border-radius:14px;background:var(--soft);padding:22px;
+    display:flex;gap:18px;align-items:center;justify-content:space-between;flex-wrap:wrap}
+  .cta p{margin:0;font-size:15px;max-width:52ch}
+  .btn{display:inline-block;background:var(--ink);color:#fff;text-decoration:none;font-weight:650;font-size:16px;
+    padding:14px 22px;border-radius:10px}
+  .btn:hover{background:#2B3A63}
+
+  footer{margin-top:52px;padding-top:18px;border-top:1px solid var(--line);display:flex;justify-content:space-between;
+    gap:16px;flex-wrap:wrap;font-size:12.5px;color:var(--muted)}
+
+  @media (max-width:760px){
+    .page{padding:26px 18px 48px}
+    .qa{grid-template-columns:1fr}
+    header.top{flex-direction:column;gap:10px}
+    .meta{text-align:left}
+    .btn{width:100%;text-align:center}
+  }
+  @media print{ body{font-size:12px} .page{max-width:none;padding:0} section{break-inside:avoid} }
+
+  /* ajuste: la tabla de 7 columnas no debe desbordar en escritorio */
+  .tw table{width:100%;min-width:0}
+  .tw th{white-space:normal}
+  .tw td{overflow-wrap:anywhere}
+  .tw td.k{white-space:normal}
+</style>
+</head>
+<body>
+<div class="page">
+
+  <nav class="nav"><a class="on" href="estudio.html">Estudio</a><a href="./">Flujo</a><a href="flujo-canales.html">Canales</a><a href="simulador.html">Simulador</a></nav>
+
+  <header class="top">
+    <div class="brand"><b>Weaves</b> &nbsp;·&nbsp; documento de trabajo</div>
+    <div class="meta">Empieza de Cero, SL<br>Octubre 2026 · v1</div>
+  </header>
+
+  <h1>Estudio de canales: por qué estos y en este orden</h1>
+  <p class="sub">La justificación que hay detrás del flujo de canales. Léela antes de abrir el flujo.</p>
+
+  <section>
+    <h2>1 · Pregunta y respuesta</h2>
+    <div class="qa">
+      <div class="box"><h3>Pregunta</h3>
+        <p>¿Qué canales debe usar el despacho para recobrar sus propios honorarios, en qué orden y hasta dónde puede llegar cada uno, sabiendo que el cliente suele estar en insolvencia y que WhatsApp es el primer contacto deseado?</p></div>
+      <div class="box a"><h3>Respuesta</h3>
+        <p>WhatsApp, SMS, email y una llamada breve sirven como <b>recordatorio de servicio</b>, sin plazo ni consecuencias. El <b>requerimiento</b> sale por email certificado (con SMS certificado y llamada humana de apoyo), tras una puerta jurídica humana y nunca por WhatsApp.</p></div>
+    </div>
+  </section>
+
+  <section>
+    <h2>2 · Cómo se hizo</h2>
+    <div class="box warn">
+      <p><b>No hay benchmarks públicos fiables</b> de recobro de honorarios de despachos en España. Las tasas y costes de este estudio son <b>estimación profesional, no dato medido</b>.</p>
+    </div>
+    <ul class="tight" style="margin-top:14px">
+      <li><b>Lectura directa</b> de la política de WhatsApp Business (actualizada el 23/09/2026) y del art. 21 de la LSSI-CE, en texto oficial.</li>
+      <li><b>Criterio profesional</b> para cifras de contacto, respuesta y coste por canal. Solo hay un dato de terceros, una comparativa relativa de un blog de proveedor, y es débil: no se usa para decidir.</li>
+      <li><b>Límites</b>: buena parte del marco jurídico está sin contrastar con el texto oficial (ver apartado 5). La tabla se calibra con los datos propios del despacho tras el A/B del apartado 6.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>3 · Comparativa de canales</h2>
+    <div class="tw"><table class="wide">
+      <thead><tr><th>Canal</th><th>Contacto</th><th>Respuesta</th><th>Coste unitario</th><th>Valor probatorio</th><th>Presión percibida</th><th>Tramo recomendado</th></tr></thead>
+      <tbody>
+        <tr><td class="k">WhatsApp (plantilla de servicio)</td><td>70-85 % <span class="tag e">E</span></td><td>20-35 % <span class="tag e">E</span></td><td>0,03-0,10 € <span class="tag e">E</span></td><td>Medio: logs y lectura, no fehaciente <span class="tag e">E</span></td><td>Baja-media <span class="tag e">E</span></td><td><span class="pill t">Recordatorios</span></td></tr>
+        <tr><td class="k">SMS</td><td>85-95 % entrega, 35-50 % lectura <span class="tag e">E</span></td><td>3-8 % <span class="tag e">E</span></td><td>0,04-0,08 € <span class="tag e">E</span></td><td>Bajo-medio: informe del proveedor <span class="tag e">E</span></td><td>Media <span class="tag e">E</span></td><td><span class="pill t">Recordatorios</span> (respaldo)</td></tr>
+        <tr><td class="k">Email</td><td>90 % entrega, 20-35 % apertura <span class="tag e">E</span></td><td>5-12 % <span class="tag e">E</span></td><td>≈ 0,01 € <span class="tag e">E</span></td><td>Medio; bajo sin certificar <span class="tag e">E</span></td><td>Baja <span class="tag e">E</span></td><td><span class="pill t">Recordatorios</span></td></tr>
+        <tr><td class="k">Email certificado</td><td>Igual que email <span class="tag e">E</span></td><td>8-15 % <span class="tag e">E</span></td><td>0,5-1,5 € <span class="tag e">E</span></td><td>Alto: envío, contenido y entrega <span class="tag e">E</span></td><td>Media <span class="tag e">E</span></td><td><span class="pill r">Impagos</span></td></tr>
+        <tr><td class="k">Burofax</td><td>60-75 % lo recoge <span class="tag e">E</span></td><td>15-25 % <span class="tag e">E</span></td><td>4-9 € <span class="tag e">E</span></td><td>Muy alto: fehaciente <span class="tag e">E</span></td><td>Alta <span class="tag e">E</span></td><td><span class="pill r">Impagos</span> solo si cuota alta o M6/M7/M9</td></tr>
+        <tr><td class="k">Llamada humana</td><td>30-45 % contesta <span class="tag e">E</span></td><td>30-50 % de los contactados <span class="tag e">E</span></td><td>2-5 € por intento <span class="tag e">E</span></td><td>Medio: nota interna, grabación con aviso <span class="tag e">E</span></td><td>Media, según tono <span class="tag e">E</span></td><td><span class="pill a">Ambos</span>: cierra recordatorios y recuerda plazo</td></tr>
+        <tr><td class="k">Bot de voz</td><td>25-40 % contesta <span class="tag e">E</span></td><td>5-12 % <span class="tag e">E</span></td><td>0,10-0,25 € por llamada <span class="tag e">E</span></td><td>Medio: grabación <span class="tag e">E</span></td><td>Alta, impersonal <span class="tag e">E</span></td><td><span class="pill t">Recordatorios</span>, piloto acotado; nunca en impagos</td></tr>
+      </tbody>
+    </table></div>
+    <p class="note"><b>Marcas:</b> <span class="tag e">E</span> estimación profesional, sin fuente medida; calibrar con datos propios. <span class="tag v">V</span> verificado en texto oficial leído en la sesión de análisis. Ninguna cifra de esta tabla lleva <span class="tag v">V</span>: son todas estimaciones. Con cuota de 40 € solo WhatsApp, SMS, email y bot son viables en coste; burofax y llamada humana se reservan para cuota ≥ 100 € o más de 3 cuotas vencidas <span class="tag e">E</span>.</p>
+  </section>
+
+  <section>
+    <h2>4 · El caso WhatsApp</h2>
+    <div class="box">
+      <ul class="tight">
+        <li>La política de WhatsApp Business lista el <b>«cobro de deudas»</b> entre los servicios financieros restringidos <span class="tag v">V</span>.</li>
+        <li>El texto verificado <b>no exceptúa al acreedor propio</b>. Que el acreedor sea el despacho no desbloquea la política <span class="tag v">V</span>.</li>
+        <li>Por eso WhatsApp se usa <b>solo como canal de servicio</b>: aviso de cuota con enlace de pago, plantilla neutra, sin plazo ni consecuencias. <b>El requerimiento va por otra vía</b> (email certificado).</li>
+        <li>Disfrazar un requerimiento de «estado de cuenta» es peor: puede contar como categorización engañosa y no sirve para constituir en mora <span class="tag e">E</span>.</li>
+      </ul>
+    </div>
+    <div class="box warn" style="margin-top:14px">
+      <h3>Qué falta</h3>
+      <p><b>La respuesta escrita de Meta o del BSP</b> sobre si un recordatorio de honorarios propios entra en «cobro de deudas», y cómo se clasifica la plantilla. Sin ella, se asume riesgo de bloqueo del número y de la cuenta, que también es el canal de atención del despacho. El SMS y el email quedan montados como alternativa para que un bloqueo no paralice el recobro.</p>
+    </div>
+  </section>
+
+  <section>
+    <h2>5 · Marco jurídico por fases</h2>
+    <div class="tw"><table class="wide">
+      <thead><tr><th>Fase</th><th>Qué se puede comunicar</th><th>Por qué vía</th><th>Prohibido</th></tr></thead>
+      <tbody>
+        <tr><td class="k">1 · Antes del concurso</td><td>Recordatorio de cuota (importe, fecha, enlace de pago). Con más de 3 cuotas, reclamación escrita con plazo. Llamada humana para pactar calendario.</td><td>WhatsApp de servicio, SMS y email; el requerimiento, por email certificado o burofax.</td><td>Amenazar con lo que no se va a ejecutar; mencionar el asunto ante terceros; pedir pagos extraordinarios o anticipados.</td></tr>
+        <tr><td class="k">2 · Concurso declarado</td><td>Comunicación del crédito en el procedimiento; estado de cuenta informativo, sin plazo ni consecuencias, enviado por persona.</td><td>Escrito en el procedimiento o email certificado a la administración concursal; llamada humana.</td><td>WhatsApp y SMS automáticos; recordatorios de cuotas anteriores a la declaración; requerimientos con plazo; compensar o ejecutar.</td></tr>
+        <tr><td class="k">3 · EPI concedida</td><td>Cuotas del plan de pagos (con revisión jurídica); honorarios por servicios nuevos y pactados aparte; estado de cuenta informativo.</td><td>Email certificado y llamada humana.</td><td><b>Reclamar un crédito exonerado</b> o mantener su recordatorio activo. Ante la duda, no se envía nada.</td></tr>
+      </tbody>
+    </table></div>
+    <p class="note">Artículos del TRLC de referencia: <b>142, 143, 152, 242.1.6.º y 499.2</b>. El 242.1.6.º se usa para créditos contra la masa y el 499.2 para el efecto de la exoneración. <b>Estado de verificación:</b> comprobados el 19/10/2026 en el texto consolidado del BOE (BOE-A-2020-4859): el <b>142</b> prohíbe iniciar ejecuciones singulares desde la declaración de concurso; el <b>143</b> suspende las que estén en trámite y anula lo actuado después; el <b>152</b> suspende el devengo de intereses, salvo salariales y crédito con garantía real; el <b>242.1.6.º</b> califica como crédito contra la masa los honorarios por asistencia y representación durante la tramitación; el <b>499.2</b> remite al incidente concursal las acciones sobre deuda no exonerable o asumida durante el plan de pagos. La calificación de cada cuota concreta la valida un abogado del despacho. La fase la determina un dato del expediente (estado procesal), no el criterio del gestor.</p>
+  </section>
+
+  <section>
+    <h2>6 · Qué se mide</h2>
+    <div class="tw"><table class="mid">
+      <thead><tr><th>Medida</th><th>Cómo se calcula</th></tr></thead>
+      <tbody>
+        <tr><td class="k">Contacto</td><td>Entrega + lectura, por canal y tramo.</td></tr>
+        <tr><td class="k">Respuesta</td><td>Contestación o acción tras el contacto.</td></tr>
+        <tr><td class="k">Pago ≤ 7 días</td><td>Cuotas pagadas en los 7 días siguientes al contacto.</td></tr>
+        <tr><td class="k">Coste por euro recuperado</td><td>Coste de los contactos / importe cobrado.</td></tr>
+        <tr><td class="k">Bloqueos y bajas</td><td>Bloqueos del número, bajas, oposiciones y quejas.</td></tr>
+      </tbody>
+    </table></div>
+    <div class="box" style="margin-top:14px">
+      <h3>A/B limpio en 4-6 semanas</h3>
+      <ul class="tight">
+        <li><b>Unidad</b>: la cuota vencida, no el mensaje. Asignación aleatoria por último dígito del expediente, con estratos por importe (&lt; 60 € y ≥ 60 €).</li>
+        <li><b>Brazos</b>: A = WhatsApp + SMS a +2 días; B = WhatsApp + bot de voz a +2 días. Un solo cambio por test.</li>
+        <li><b>Exclusiones</b>: deudores vulnerables y casos con disputa.</li>
+        <li><b>Lectura</b>: con 40-80 cuotas por brazo no habrá significancia fina. Se decide con diferencias ≥ 10 puntos en pago ≤ 7 días y revisando casos <span class="tag e">E</span>.</li>
+        <li><b>Si cambia el diseño</b>: aviso o bloqueo de Meta saca el recobro de WhatsApp; bot a ≤ 3 puntos del SMS o coste &gt; 0,15 € por euro, se retira <span class="tag e">E</span>.</li>
+      </ul>
+    </div>
+  </section>
+
+  <section>
+    <h2>7 · Riesgos y controles</h2>
+    <div class="tw"><table class="wide">
+      <thead><tr><th>Riesgo</th><th>Cómo se materializa</th><th>Control</th></tr></thead>
+      <tbody>
+        <tr><td class="k">AEPD</td><td>Mensaje que revela insolvencia a un tercero; envío tras oposición; datos de más; falta de información previa.</td><td>Solo nombre, importe, fecha y enlace; información en la hoja de encargo; registro de oposiciones con parada automática.</td></tr>
+        <tr><td class="k">Honor</td><td>Contenido que lee un tercero (móvil compartido); tono de «moroso».</td><td>Nada a terceros, nunca; plantillas sin alusión a insolvencia ni al procedimiento; el bot no confirma la deuda a quien no sea el titular.</td></tr>
+        <tr><td class="k">Deontología</td><td>Presión a un cliente vulnerable; usar contra el cliente lo que solo se sabe como letrado.</td><td>Revisión del abogado; marca de vulnerabilidad; solo humano en esos casos; consulta al colegio ante duda.</td></tr>
+        <tr><td class="k">Riesgo concursal</td><td>Cobrar fuera del procedimiento un crédito anterior; pago preferente previo; reclamar un crédito exonerado.</td><td>Semáforo procesal en el CRM que bloquea envíos; calificación de cada cuota por un abogado; lista de créditos exonerados.</td></tr>
+        <tr><td class="k">Bloqueo de cuenta</td><td>Plantilla con apariencia de cobro; quejas «bloquear/denunciar»; reclasificación por Meta.</td><td>Texto neutro y real; baja inmediata a petición; no insistir; SMS y email ya montados como alternativa.</td></tr>
+      </tbody>
+    </table></div>
+  </section>
+
+  <section>
+    <h2>8 · Cierre</h2>
+    <p><b>Aviso: esto no es asesoramiento jurídico. El despacho valida cada punto antes de implantar.</b></p>
+    <div class="cta">
+      <p class="muted">Con esto como base, el flujo separa dos bloques: hasta dónde llegan los recordatorios y dónde empiezan los impagos.</p>
+      <a class="btn" href="flujo-canales.html">Ver el flujo de canales →</a>
+    </div>
+  </section>
+
+  <footer>
+    <span>Preparado por Weaves · octubre 2026</span>
+    <span>Cifras [E]: estimación profesional, a calibrar con datos propios.</span>
+  </footer>
+
+</div>
+</body>
+</html>
