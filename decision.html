@@ -1,0 +1,389 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex,nofollow,noarchive">
+<title>Decisor de canales · Recobro de honorarios · Empieza de Cero</title>
+<style>
+  :root{
+    --ink:#1E2A4A; --muted:#5B6478; --line:#E4E8EF; --bg:#FBFBFD; --soft:#F7F9FB;
+    --teal:#00A79A; --teal-soft:#E8F7F5; --amber:#B96E12; --amber-soft:#FCF3E4;
+    --rose:#BE3F55; --rose-soft:#FCEDF0; --blue:#3B9CFF; --grey:#8B95A6;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0;background:var(--bg);color:var(--ink)}
+  body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Inter,Roboto,Helvetica,Arial,sans-serif;
+    font-size:16px;line-height:1.5;-webkit-font-smoothing:antialiased}
+  .page{max-width:1000px;margin:0 auto;padding:22px 24px 64px}
+
+  .nav{display:flex;margin:0 0 28px;border-bottom:1px solid var(--line);overflow-x:auto}
+  .nav a{font-size:13.5px;color:var(--muted);text-decoration:none;padding:9px 14px;border-right:1px solid var(--line);white-space:nowrap}
+  .nav a.on{color:var(--ink);font-weight:600;box-shadow:inset 0 -2px 0 var(--blue)}
+  .nav a:hover{background:#F6F8FC}
+
+  header.top{display:flex;justify-content:space-between;align-items:flex-start;gap:24px;
+    padding-bottom:20px;border-bottom:1px solid var(--line);margin-bottom:26px}
+  .brand{font-size:13px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+  .brand b{color:var(--teal)}
+  .meta{font-size:12.5px;color:var(--muted);text-align:right}
+  h1{font-size:clamp(24px,4vw,32px);line-height:1.15;letter-spacing:-.02em;margin:0 0 8px;font-weight:650}
+  .sub{font-size:16px;color:var(--muted);margin:0 0 8px;max-width:70ch}
+
+  svg.i{width:18px;height:18px;flex:none;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+
+  .layout{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.05fr);gap:22px;align-items:start}
+  @media (max-width:860px){ .layout{grid-template-columns:1fr} }
+
+  .panel{border:1px solid var(--line);border-radius:14px;background:#fff;padding:6px 16px 16px}
+  .panel h2{font-size:11.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);
+    margin:16px 0 8px;font-weight:650}
+  .q{margin:0 0 14px}
+  .q .lb{font-size:13.5px;font-weight:600;margin:0 0 6px;display:flex;gap:6px;align-items:baseline}
+  .q .lb span{font-weight:500;color:var(--muted);font-size:11.5px}
+  .seg{display:flex;flex-wrap:wrap;gap:6px}
+  .seg button{font-family:inherit;font-size:12.5px;padding:6px 10px;border-radius:8px;border:1px solid var(--line);
+    background:#fff;color:var(--ink);cursor:pointer;line-height:1.2}
+  .seg button:hover{border-color:#BFC8D6;background:#F7F9FC}
+  .seg button[aria-pressed="true"]{background:var(--ink);border-color:var(--ink);color:#fff;font-weight:600}
+
+  .res{border:1px solid var(--line);border-radius:14px;background:#fff;overflow:hidden;position:sticky;top:16px}
+  .res-h{padding:14px 18px;border-bottom:1px solid var(--line);display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+  .res-h .ic{width:40px;height:40px;border-radius:10px;display:grid;place-items:center;border:1px solid var(--line);flex:none}
+  .res-h .tt{font-size:17px;font-weight:650;line-height:1.25}
+  .res-h .sm{font-size:12.5px;color:var(--muted)}
+  .pill{font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;
+    padding:3px 9px;border-radius:999px;border:1px solid;margin-left:auto;white-space:nowrap}
+  .pill.serv{color:#00796F;border-color:#A9DDD7;background:var(--teal-soft)}
+  .pill.jur{color:var(--rose);border-color:#EDB9C3;background:var(--rose-soft)}
+  .pill.stop{color:#4A5568;border-color:#CBD2DD;background:#F1F4F8}
+
+  .res-b{padding:16px 18px}
+  .kv{display:grid;grid-template-columns:104px minmax(0,1fr);gap:8px 12px;font-size:14px}
+  .kv dt{color:var(--muted);font-size:12.5px;padding-top:2px}
+  .kv dd{margin:0}
+  .kv dd b{font-weight:650}
+  .chan{display:flex;align-items:center;gap:7px;flex-wrap:wrap}
+  .chan .bx{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line);border-radius:8px;
+    padding:3px 8px;background:var(--soft);font-size:13px;font-weight:600}
+  .chan .bx.sec{background:#fff;font-weight:500;color:var(--muted)}
+
+  .why{margin:14px 0 0;padding:12px 14px;border-radius:10px;background:var(--soft);border:1px solid var(--line)}
+  .why h3{margin:0 0 6px;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);font-weight:650}
+  .why ul{margin:0;padding-left:18px;font-size:13px}
+  .why li{margin:0 0 4px}
+  .warn{margin:12px 0 0;border-left:4px solid var(--rose);background:var(--rose-soft);border-radius:8px;padding:10px 12px;font-size:13px}
+  .warn b{color:var(--rose)}
+
+  .steps{margin:18px 0 0;border-top:1px solid var(--line);padding-top:14px}
+  .steps ol{list-style:none;margin:0;padding:0;display:flex;gap:6px;flex-wrap:wrap}
+  .steps li{font-size:11.5px;padding:4px 8px;border-radius:7px;border:1px dashed var(--line);color:var(--muted)}
+  .steps li.on{border-style:solid;border-color:var(--ink);color:var(--ink);font-weight:650;background:var(--soft)}
+
+  .foot{margin:26px 0 0;font-size:12.5px;color:var(--muted)}
+  footer{margin-top:44px;padding-top:18px;border-top:1px solid var(--line);display:flex;justify-content:space-between;
+    gap:16px;flex-wrap:wrap;font-size:12.5px;color:var(--muted)}
+  @media (max-width:860px){ .res{position:static} }
+</style>
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false"><defs>
+  <symbol id="i-wa" viewBox="0 0 24 24"><path d="M4 20l1.3-4.2A8 8 0 1 1 8.2 18.8z"/><path d="M9.3 8.6c.3 2.2 2.3 4.3 4.9 5l1.2-1.2-1.8-1-.9.6c-.7-.3-1.4-1-1.7-1.7l.6-.9-1-1.8z"/></symbol>
+  <symbol id="i-sms" viewBox="0 0 24 24"><path d="M4 5h16v11H9.5L4 20z"/><circle cx="8.5" cy="10.5" r=".6"/><circle cx="12" cy="10.5" r=".6"/><circle cx="15.5" cy="10.5" r=".6"/></symbol>
+  <symbol id="i-smscert" viewBox="0 0 24 24"><path d="M13 16H9.5L4 20V5h16v6"/><circle cx="18" cy="17" r="4"/><path d="M16.2 17l1.3 1.3 2.3-2.5"/></symbol>
+  <symbol id="i-mail" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3.5 7l8.5 6 8.5-6"/></symbol>
+  <symbol id="i-cert" viewBox="0 0 24 24"><path d="M14 18H5a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2h13a2 2 0 0 1 2 2v4"/><path d="M3.5 7.5L11.5 13l8-5.5"/><circle cx="18" cy="17" r="4"/><path d="M16.2 17l1.3 1.3 2.3-2.5"/></symbol>
+  <symbol id="i-call" viewBox="0 0 24 24"><path d="M5 4h3.5l1.8 4.6-2.2 1.4a10 10 0 0 0 5.9 5.9l1.4-2.2L20 15.5V19a2 2 0 0 1-2 2A15 15 0 0 1 3 6a2 2 0 0 1 2-2z"/></symbol>
+  <symbol id="i-bot" viewBox="0 0 24 24"><rect x="5" y="8" width="14" height="11" rx="3"/><path d="M12 8V5"/><circle cx="12" cy="4" r="1"/><circle cx="9.2" cy="13" r=".7"/><circle cx="14.8" cy="13" r=".7"/><path d="M9.5 16.2h5M3 12v3M21 12v3"/></symbol>
+  <symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 3l8 3v6c0 4.8-3.4 7.8-8 9-4.6-1.2-8-4.2-8-9V6z"/><path d="M8.5 12l2.4 2.4 4.6-4.8"/></symbol>
+  <symbol id="i-flag" viewBox="0 0 24 24"><path d="M5 21V4"/><path d="M5 4h12l-2.5 4L17 12H5"/></symbol>
+  <symbol id="i-stop" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M8 12h8"/></symbol>
+</defs></svg>
+
+<div class="page">
+
+  <nav class="nav">
+    <a href="estudio.html">Estudio</a>
+    <a href="./">Flujo</a>
+    <a href="flujo-canales.html">Canales</a>
+    <a class="on" href="decision.html">Decisión</a>
+    <a href="simulador.html">Simulador</a>
+  </nav>
+
+  <header class="top">
+    <div class="brand"><b>Weaves</b> · documento de trabajo</div>
+    <div class="meta">Empieza de Cero, SL<br>Octubre 2026 · v1</div>
+  </header>
+
+  <h1>Decisor: qué canal toca y hasta dónde se puede llegar</h1>
+  <p class="sub">Elige el caso y devuelve la vía, el mensaje, el plazo y la evidencia que hay que archivar. Aplica las reglas del estudio y del dictamen: el número de cuotas fija el nivel, el estado procesal fija la fase, y la fase manda sobre el canal.</p>
+
+  <div class="layout">
+
+    <section class="panel" aria-label="Datos del expediente">
+      <h2>1 · El expediente</h2>
+
+      <div class="q" data-q="cuotas">
+        <div class="lb">Cuotas impagadas</div>
+        <div class="seg">
+          <button data-v="1" aria-pressed="true">1</button>
+          <button data-v="2" aria-pressed="false">2</button>
+          <button data-v="3" aria-pressed="false">3</button>
+          <button data-v="mas3" aria-pressed="false">Más de 3</button>
+          <button data-v="acuerdo" aria-pressed="false">Acuerdo incumplido</button>
+        </div>
+      </div>
+
+      <div class="q" data-q="estado">
+        <div class="lb">Estado procesal</div>
+        <div class="seg">
+          <button data-v="sin" aria-pressed="true">Sin demanda</button>
+          <button data-v="demanda" aria-pressed="false">Demanda presentada</button>
+          <button data-v="auto" aria-pressed="false">Auto de apertura</button>
+          <button data-v="epi" aria-pressed="false">EPI en tramitación</button>
+          <button data-v="plan" aria-pressed="false">Plan de pagos</button>
+          <button data-v="epic" aria-pressed="false">EPI concedida</button>
+          <button data-v="exon" aria-pressed="false">Crédito exonerado</button>
+        </div>
+      </div>
+
+      <h2>2 · El contacto</h2>
+
+      <div class="q" data-q="wa">
+        <div class="lb">WhatsApp</div>
+        <div class="seg">
+          <button data-v="leido" aria-pressed="true">Entregado y leído</button>
+          <button data-v="sinlect" aria-pressed="false">Entregado, sin lectura</button>
+          <button data-v="nowa" aria-pressed="false">Sin WhatsApp</button>
+        </div>
+      </div>
+
+      <div class="q" data-q="resp">
+        <div class="lb">Respuesta del cliente</div>
+        <div class="seg">
+          <button data-v="nada" aria-pressed="true">Sin respuesta</button>
+          <button data-v="ajuste" aria-pressed="false">Pide ajustar el plan</button>
+          <button data-v="paga" aria-pressed="false">Ha pagado</button>
+          <button data-v="baja" aria-pressed="false">Pide baja u oposición</button>
+        </div>
+      </div>
+
+      <div class="q" data-q="importe">
+        <div class="lb">Importe de la cuota <span>solo cambia la intensidad, no la vía</span></div>
+        <div class="seg">
+          <button data-v="bajo" aria-pressed="true">Menos de 60 €</button>
+          <button data-v="medio" aria-pressed="false">60-100 €</button>
+          <button data-v="alto" aria-pressed="false">Más de 100 €</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="res" aria-live="polite" aria-label="Resultado">
+      <div class="res-h">
+        <div class="ic" id="rIc"><svg class="i"><use href="#i-wa"/></svg></div>
+        <div>
+          <div class="tt" id="rTt">—</div>
+          <div class="sm" id="rSm">—</div>
+        </div>
+        <span class="pill serv" id="rPill">servicio</span>
+      </div>
+      <div class="res-b">
+        <dl class="kv">
+          <dt>Canal</dt><dd id="rChan" class="chan">—</dd>
+          <dt>Mensaje</dt><dd id="rMsg">—</dd>
+          <dt>Plazo</dt><dd id="rPlazo">—</dd>
+          <dt>Quién</dt><dd id="rQuien">—</dd>
+          <dt>Evidencia</dt><dd id="rEv">—</dd>
+        </dl>
+        <div class="why">
+          <h3>Por qué</h3>
+          <ul id="rWhy"></ul>
+        </div>
+        <div class="warn" id="rWarn" hidden></div>
+        <div class="steps">
+          <h3 style="margin:0 0 8px;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)">Recorrido</h3>
+          <ol id="rSteps"></ol>
+        </div>
+      </div>
+    </section>
+
+  </div>
+
+  <p class="foot">Esta simulación aplica el árbol del estudio: <b>servicio</b> (avisos sin plazo ni consecuencias) hasta tres cuotas,
+  <b>jurídico</b> (requerimiento con plazo) desde más de tres, y <b>parada</b> cuando el estado procesal lo exige. No es
+  asesoramiento jurídico: la calificación de cada crédito la valida el abogado del despacho.</p>
+
+  <footer>
+    <span>Preparado por Weaves · octubre 2026</span>
+    <span>Reglas: estudio de canales + dictamen sobre acreedor propio.</span>
+  </footer>
+</div>
+
+<noscript><p style="max-width:940px;margin:0 auto 40px;padding:12px 18px;border:1px solid #E4E8EF;border-radius:10px">
+Este decisor necesita JavaScript. El flujo estático equivalente está en «Canales».</p></noscript>
+
+<script>
+(function(){
+  "use strict";
+  const S = {cuotas:'1', estado:'sin', wa:'leido', resp:'nada', importe:'bajo'};
+
+  const ICON = {
+    wa:'#i-wa', sms:'#i-sms', smscert:'#i-smscert', mail:'#i-mail', cert:'#i-cert',
+    call:'#i-call', bot:'#i-bot', shield:'#i-shield', flag:'#i-flag', stop:'#i-stop'
+  };
+  const NAME = {
+    wa:'WhatsApp', sms:'SMS', smscert:'SMS certificado', mail:'Email', cert:'Email certificado (Openum)',
+    call:'Llamada humana', bot:'Bot de voz', shield:'Validación jurídica', flag:'Cierre', stop:'Parada'
+  };
+
+  document.querySelectorAll('.q').forEach(q=>{
+    q.querySelectorAll('button').forEach(b=>{
+      b.addEventListener('click',()=>{
+        q.querySelectorAll('button').forEach(x=>x.setAttribute('aria-pressed','false'));
+        b.setAttribute('aria-pressed','true');
+        S[q.dataset.q]=b.dataset.v;
+        render();
+      });
+    });
+  });
+
+  const CUOTAS = {1:'1 cuota',2:'2 cuotas',3:'3 cuotas',mas3:'más de 3 cuotas',acuerdo:'acuerdo incumplido'};
+  const ESTADO = {sin:'sin demanda',demanda:'demanda presentada',auto:'auto de apertura',epi:'EPI en tramitación',
+                  plan:'plan de pagos',epic:'EPI concedida',exon:'crédito exonerado'};
+
+  function fase(){
+    if(S.estado==='exon') return 'bloqueado';
+    if(S.estado==='epic') return 'fase3';
+    if(S.estado==='auto'||S.estado==='plan'||S.estado==='epi') return 'fase2';
+    return 'fase1';
+  }
+
+  function render(){
+    const f = fase();
+    let r;
+
+    /* 1 · paradas absolutas */
+    if(S.resp==='baja'){
+      r = {pill:'stop', icon:'stop', tt:'Parada: baja u oposición', sm:'No se envía nada por ningún canal',
+        canal:[['stop','Ninguno']], msg:'—', plazo:'Inmediato', quien:'Administración',
+        ev:'Registro de la oposición con fecha y canal', why:[
+          'Una petición de baja o una oposición al tratamiento se atiende antes de cualquier otro paso.',
+          'Se marca en el CRM y se cancela cualquier envío programado; insistir aquí es el escenario que genera reclamación.'
+        ], warn:'No se confirma ni se comenta la deuda con terceros. Si la petición llega por teléfono, se registra igual.'};
+    } else if(S.resp==='paga'){
+      r = {pill:'stop', icon:'flag', tt:'Cerrado: pago registrado', sm:'El expediente sale del circuito',
+        canal:[['flag','Ninguno']], msg:'—', plazo:'—', quien:'Administración',
+        ev:'Comprobante de pago y fecha de regularización', why:[
+          'Con pago confirmado no hay más actuaciones de recobro.',
+          'Si había un acuerdo en curso, se cierra y se cancelan las tareas de vencimiento pendientes.'
+        ], warn:''};
+    } else if(S.resp==='ajuste'){
+      r = {pill:'serv', icon:'call', tt:'Pasa a una persona: propuesta de ajuste', sm:'No se negocia por chat ni por bot',
+        canal:[['call','Llamada humana']], msg:'Guion de acuerdo (sin cifras cerradas por escrito en el chat)', plazo:'Responder en 48 h',
+        quien:'Administración con visto bueno de dirección',
+        ev:'Nota de la llamada con la propuesta y su aceptación', why:[
+          'Una propuesta de pago se pacta con una persona: el bot no negocia ni acepta quitas.',
+          'Si el expediente está en concurso, el acuerdo no puede contradecir el plan de pagos aprobado.'
+        ], warn:'Si el ajuste se acepta, se formaliza por email y se crea una tarea por cada vencimiento.'};
+    } else if(f==='bloqueado'){
+      r = {pill:'stop', icon:'stop', tt:'No reclamable: crédito exonerado', sm:'El recordatorio se apaga y se cierra',
+        canal:[['stop','Ninguno']], msg:'—', plazo:'—', quien:'Jurídico',
+        ev:'Resolución de exoneración en el expediente', why:[
+          'Un crédito exonerado no se reclama ni se mantiene como pendiente en el CRM.',
+          'Es el error más caro del circuito: reclamación indebida al propio cliente.'
+        ], warn:'Ante cualquier duda sobre si el crédito quedó exonerado, no se envía nada hasta que lo decida el abogado.'};
+    } else if(f==='fase2'){
+      r = {pill:'jur', icon:'shield', tt:'Fase 2: concurso declarado', sm:'Sin automatismos. Calificación del crédito primero',
+        canal:[['cert','Email certificado'],['call','Llamada humana']],
+        msg:'Comunicación de crédito a la administración concursal · al deudor, estado de cuenta informativo sin plazo',
+        plazo:'Según el procedimiento', quien:'Jurídico (califica) + administración',
+        ev:'Escrito presentado y su registro · certificado de envío · nota de revisión jurídica', why:[
+          'Desde la declaración no pueden iniciarse ejecuciones singulares (art. 142 TRLC) y las que estaban en marcha se suspenden (art. 143).',
+          'Los honorarios anteriores son crédito concursal: se cobran en el procedimiento, no por requerimientos al margen.',
+          'Los honorarios por asistencia durante el concurso pueden ser crédito contra la masa (art. 242.1.6.º TRLC): eso lo califica un abogado.',
+          'Las plantillas M6–M9 del flujo maestro quedan como borrador para el abogado: no se disparan automáticamente.'
+        ], warn:'Ni WhatsApp ni SMS automáticos. Tampoco requerimientos con plazo. Cualquier mensaje al deudor va sin plazo ni consecuencias y lo envía una persona.'};
+    } else if(f==='fase3'){
+      r = {pill:'jur', icon:'shield', tt:'Fase 3: EPI concedida', sm:'Solo lo que el plan o la resolución permitan',
+        canal:[['cert','Email certificado'],['call','Llamada humana']],
+        msg:'Según calificación: cuotas del plan de pagos o servicios nuevos posteriores',
+        plazo:'Según el plan', quien:'Jurídico',
+        ev:'Resolución de exoneración · plan de pagos · calificación del crédito', why:[
+          'La exoneración extingue los créditos exonerables; los no exonerables o asumidos durante el plan se reclaman ante el juez del concurso por incidente (art. 499.2 TRLC).',
+          'Antes de enviar nada hay que saber si el crédito concreto está afectado.'
+        ], warn:'Si el crédito es exonerable, se pasa a «no reclamable». No se envía recordatorio mientras no esté calificado.'};
+    } else {
+      /* fase 1 */
+      const formal = (S.cuotas==='mas3' || S.cuotas==='acuerdo');
+      if(formal){
+        const msg = S.estado==='demanda' ? 'M5 · requerimiento formal (demanda presentada)' : 'M4 · requerimiento formal (sin demanda)';
+        const extra = S.importe==='alto' ? [['cert','Burofax excepcional']] : [];
+        r = {pill:'jur', icon:'shield', tt:'Fase 1 · vía formal: requerimiento', sm:'Puerta jurídica primero, después el envío certificado',
+          canal:[['cert','Email certificado (Openum)'],['smscert','SMS certificado']].concat(extra),
+          msg:msg+' · plazo 10 días', plazo:'10 días naturales', quien:'Jurídico valida · Recuperaciones envía',
+          ev:'Certificado de envío, entrega, hash y sello de tiempo · certificado del SMS', why:[
+            'Más de tres cuotas (o un acuerdo incumplido) cambia la naturaleza: ya no es recordatorio, es requerimiento.',
+            'Antes de enviar se cierra la puerta jurídica: estado procesal, masa, plan, EPI y vía.',
+            'El requerimiento sale por email certificado cualificado; el SMS certificado solo avisa de que está en el correo.'
+          ], warn:'Nada de esto sale por WhatsApp: un requerimiento con plazo y consecuencias no se disfraza de estado de cuenta.'};
+      } else {
+        let canal, msg, plazo, why;
+        if(S.wa==='leido'){
+          canal=[['wa','WhatsApp'],['sms','SMS de respaldo']];
+          msg='T1 · cuota pendiente, con enlace de pago'; plazo='Sin plazo: es servicio';
+          why=['El primer contacto es WhatsApp con plantilla de servicio: importe, enlace y opción de ajustar. Sin plazo ni consecuencias.',
+               'Si no hay respuesta en 48 h, entra el siguiente paso de la secuencia (SMS o email).'];
+        } else if(S.wa==='sinlect'){
+          canal=[['sms','SMS'],['mail','Email']];
+          msg='T1b · recordatorio corto con enlace'; plazo='Sin plazo: es servicio';
+          why=['WhatsApp entregado pero sin lectura: se cambia de canal, no se repite el mismo mensaje.',
+               'El SMS lleva el enlace al mismo estado de cuenta; el email queda como registro.'];
+        } else {
+          canal=[['sms','SMS'],['mail','Email']];
+          msg='T1b · recordatorio corto con enlace'; plazo='Sin plazo: es servicio';
+          why=['Sin WhatsApp operativo, el mismo día sale por SMS.',
+               'Se avisa a administración para revisar el número: si no es del titular, no se insiste.'];
+        }
+        r = {pill:'serv', icon:'wa', tt:'Fase 1 · vía de servicio: recordatorio', sm:'Aviso de facturación, sin plazo ni consecuencias',
+          canal:canal, msg:msg, plazo:plazo, quien:'Administración',
+          ev:'Opt-in y hoja de encargo · plantilla aprobada (ID y versión) · log de entrega y lectura',
+          why:why, warn:S.cuotas==='3' ? 'Al tercer aviso se cierra el bloque de servicio: el siguiente paso ya es la puerta jurídica, no un cuarto WhatsApp.' : ''};
+      }
+    }
+
+    paint(r);
+  }
+
+  function paint(r){
+    document.getElementById('rIc').innerHTML = '<svg class="i"><use href="'+ICON[r.icon]+'"/></svg>';
+    document.getElementById('rTt').textContent = r.tt;
+    document.getElementById('rSm').textContent = r.sm;
+    const pill = document.getElementById('rPill');
+    pill.textContent = r.pill==='serv' ? 'servicio' : (r.pill==='jur' ? 'jurídico' : 'parada');
+    pill.className = 'pill '+r.pill;
+
+    document.getElementById('rChan').innerHTML = r.canal.map((c,i)=>
+      '<span class="bx'+(i?' sec':'')+'"><svg class="i" style="width:15px;height:15px"><use href="'+ICON[c[0]]+'"/></svg>'+c[1]+'</span>'
+    ).join('');
+
+    document.getElementById('rMsg').textContent = r.msg;
+    document.getElementById('rPlazo').textContent = r.plazo;
+    document.getElementById('rQuien').textContent = r.quien;
+    document.getElementById('rEv').textContent = r.ev;
+    document.getElementById('rWhy').innerHTML = r.why.map(w=>'<li>'+w+'</li>').join('');
+
+    const w = document.getElementById('rWarn');
+    if(r.warn){ w.hidden=false; w.innerHTML='<b>Atención ·</b> '+r.warn; } else { w.hidden=true; w.textContent=''; }
+
+    const chips = [r.pill==='serv' ? 'Fase 1 · servicio' : (r.pill==='jur' ? 'Vía jurídica' : 'Parada')];
+    r.canal.forEach(c=>chips.push(c[1]));
+    if(r.msg && r.msg!=='—') chips.push(r.msg.split('·')[0].trim());
+    document.getElementById('rSteps').innerHTML = chips.map(s=>'<li class="on">'+s+'</li>').join('');
+  }
+
+  render();
+})();
+</script>
+</body>
+</html>
