@@ -80,6 +80,21 @@ footer{color:#718095;font-size:13px;padding:22px 0 0;text-align:center}
 @media(max-width:900px){.rh{flex-direction:column}.rh-row{flex-direction:column}.conn{width:auto;padding:4px 0 4px 18px;text-align:left;transform:none;font-size:22px}.conn span{display:inline-block;transform:rotate(90deg)}.ms{flex:none}.frontier{flex-direction:row;width:auto;padding:8px 0}.frontier i{border-left:0;border-top:3px dashed #7b8aa0;min-height:0}.frontier span{transform:rotate(90deg);display:inline-block}.outs{grid-template-columns:repeat(2,1fr)}.hero-top{flex-direction:column}.templates-grid{grid-template-columns:1fr}.list-pane{max-height:260px}}
 @media(max-width:620px){.head{padding:15px}.head h1{font-size:18px}.subtitle{font-size:12px}.version{display:none}.container{padding:16px 12px 40px}.hero{padding:16px 14px}.hero h2{font-size:20px}.stage-strip{grid-template-columns:1fr}.reading-pane{padding:18px}.tab{padding:11px 13px}.head-right .export{padding:8px;font-size:12px}.sv-outs,.outs{grid-template-columns:1fr}.legend{padding:12px}.gscroll{height:68vh}.timeline{padding:16px 12px}.timeline li{padding-left:46px}.tl-no{width:34px;height:34px}.timeline li::before{left:16px}.timeline li::after{left:9px}.dg-bar .seg{width:100%}.dg-bar .seg button{flex:1}}
 @media print{header .export,.tabs,.tools,.seg,.hint,.small-btn{display:none!important}.panel{display:none!important}.panel.active{display:block!important}.gscroll{height:auto;overflow:visible;border:0}.gscroll svg{width:100%!important;height:auto!important}.details{position:static!important}.side-scroller{max-height:none}body{background:#fff}}
+
+/* ---------- pantalla completa del diagrama ---------- */
+#btnFs{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line);background:var(--paper);color:var(--ink);font-weight:700;font-size:12px;padding:7px 12px;border-radius:9px;white-space:nowrap}
+#btnFs:hover{border-color:#9db6cd;background:#f3f8fc}
+#btnFs[aria-pressed="true"]{background:#184f85;border-color:#184f85;color:#fff}
+#panel-diagram.fs{position:fixed;inset:0;z-index:9998;background:var(--bg);padding:14px 18px 16px;margin:0;border-radius:0;overflow:auto}
+#panel-diagram.fs .dg-shell{grid-template-columns:minmax(0,1fr) 380px;align-items:start}
+#panel-diagram.fs .gscroll{height:calc(100vh - 215px);min-height:0}
+#panel-diagram.fs #detailBox{max-height:calc(100vh - 120px)}
+#panel-diagram.fs #detailBox .side-scroller{max-height:calc(100vh - 130px)}
+#panel-diagram.fs .sv{max-height:none;overflow:visible}
+body.fslock{overflow:hidden}
+@media(max-width:900px){#panel-diagram.fs .dg-shell{grid-template-columns:minmax(0,1fr)}#panel-diagram.fs .gscroll{height:calc(100vh - 265px)}#panel-diagram.fs #detailBox .side-scroller{max-height:none}}
+@media print{#panel-diagram.fs{position:static;padding:0}#btnFs{display:none}}
+
 </style>
 </head>
 <body>
@@ -120,6 +135,7 @@ footer{color:#718095;font-size:13px;padding:22px 0 0;text-align:center}
  <div class="dg-bar">
   <div class="seg" role="group" aria-label="Nivel de detalle"><button id="btnSimple" data-view="simple" aria-pressed="true">Ruta principal (12)</button><button id="btnFull" data-view="full" aria-pressed="false">Ver todo el detalle (57)</button></div>
   <div class="vstatus" id="viewStatus" aria-live="polite"></div>
+  <button id="btnFs" aria-pressed="false" title="Ver el diagrama a pantalla completa (Esc para salir)">⤢ Pantalla completa</button>
  </div>
  <div class="dg-shell" id="dgShell">
   <div id="viewWrap">
@@ -353,6 +369,14 @@ function setZoom(z){zoom=Math.max(.3,Math.min(1.8,z));gsvg.setAttribute('width',
 function syncSticky(){if(stickyG)stickyG.setAttribute('transform',`translate(${gs.scrollLeft/zoom} 0)`)}
 gs.addEventListener('scroll',syncSticky);
 E('zoomIn').onclick=()=>setZoom(zoom*1.2);E('zoomOut').onclick=()=>setZoom(zoom/1.2);E('zoomLabel').onclick=()=>setZoom(1);E('zoomFit').onclick=()=>{setZoom((gs.clientWidth-4)/LAY.wid);gs.scrollTo(0,0)};
+/* ---------- pantalla completa ---------- */
+const fsPanel=E('panel-diagram'),fsBtn=E('btnFs');
+function fsFit(){if(!fsPanel.classList.contains('fs')||E('fullView').hidden)return;const fit=(gs.clientWidth-4)/LAY.wid;setZoom(Math.max(.85,Math.min(1,fit)))}
+function setFs(on){fsPanel.classList.toggle('fs',on);document.body.classList.toggle('fslock',on);fsBtn.setAttribute('aria-pressed',String(on));fsBtn.textContent=on?'✕ Salir (Esc)':'⤢ Pantalla completa';if(on){fsFit();gs.scrollTo(0,0)}}
+fsBtn.onclick=()=>setFs(!fsPanel.classList.contains('fs'));
+document.addEventListener('keydown',e=>{if(e.key==='Escape'&&fsPanel.classList.contains('fs'))setFs(false)});
+window.addEventListener('resize',()=>fsFit());
+
 let drag=null;gs.addEventListener('pointerdown',e=>{if(e.pointerType!=='mouse'||e.target.closest('.g-node'))return;drag=[e.clientX,e.clientY,gs.scrollLeft,gs.scrollTop];gs.classList.add('drag');gs.setPointerCapture(e.pointerId)});
 gs.addEventListener('pointermove',e=>{if(drag){gs.scrollLeft=drag[2]-(e.clientX-drag[0]);gs.scrollTop=drag[3]-(e.clientY-drag[1])}});
 for(const t of ['pointerup','pointercancel'])gs.addEventListener(t,()=>{drag=null;gs.classList.remove('drag')});
